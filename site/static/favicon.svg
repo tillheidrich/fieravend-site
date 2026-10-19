@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+<title>Fieravend</title>
+<style>
+.l{fill:none;stroke:#1F2B45;stroke-linecap:round}.w{fill:#1F2B45}.s{fill:#D9652B}.d{fill:#1F2B45}.b{fill:#FAF6EF}
+@media (prefers-color-scheme: dark){.l{stroke:#F4EFE6}.w{fill:#253049}.s{fill:#F08A4B}.d{fill:#F4EFE6}.b{fill:#121826}}
+</style>
+<defs><clipPath id="c"><circle cx="512" cy="512" r="400"/></clipPath></defs>
+<rect class="b" width="1024" height="1024" rx="224"/>
+<g clip-path="url(#c)"><circle class="s" cx="716.4" cy="630" r="110"/><rect class="w" x="0" y="630" width="1024" height="394"/></g>
+<circle class="l" cx="512" cy="512" r="400" stroke-width="72"/>
+<line class="l" x1="512" y1="512" x2="613" y2="570" stroke-width="72"/>
+<circle class="d" cx="512" cy="512" r="48"/>
+</svg>
