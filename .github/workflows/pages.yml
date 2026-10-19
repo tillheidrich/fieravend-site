@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   deploy:
-    # Runs only in the public site repo (Pages needs public repo without GitHub Pro).
+    # Runs only in the public site repo tillheidrich/fieravend-site (Pages needs a public repo without GitHub Pro). The private mirror syncs site/ there via sync-site.yml.
     if: github.repository == 'tillheidrich/fieravend-site'
     runs-on: ubuntu-latest
     environment:

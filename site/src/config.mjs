@@ -8,7 +8,7 @@ export const SITE = 'https://fieravend.heidrich-digital.de';
  * [offen] Till wants "hallo@…". The mailbox hallo@fieravend.de does not exist yet (domain not registered,
  * see wiki "Marke & Rechtliches"). Until it does, mails go to the address from the Heidrich Digital imprint.
  */
-export const MAIL = 'mail@tillheidrich.de';
+export const MAIL = 'fieravend@heidrich-digital.de';
 
 /** Provider data, copied from https://heidrich-digital.de/impressum/ on 18 Oct 2026. */
 export const PROVIDER = {
