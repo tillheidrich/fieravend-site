@@ -10,6 +10,8 @@
  * Logo & App-Icon, Sprache & Mikrotexte) and Markt & Geschäftsmodell › Preismodell. Prices are planned, not final.
  * Checks: node site/tools/check-contrast.mjs (also run here), npx html-validate "site/dist/**\/*.html",
  * node site/tools/shots.mjs (screenshots). Deploy: .github/workflows/pages.yml (GitHub Pages).
+ * Magazin: data in site/src/magazin/ (how to add an article: index.mjs there). Social cards (not published):
+ * node site/tools/social.mjs -> marketing/social/.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -29,11 +31,17 @@ import feierabend from './src/pages/feierabend.mjs';
 import nachweis from './src/pages/nachweis.mjs';
 import wochenende from './src/pages/wochenende.mjs';
 import { impressum, datenschutz, notFound } from './src/pages/legal.mjs';
+import { magazinIndex, articlePage } from './src/pages/magazin.mjs';
+import { ARTICLES, articleKey } from './src/magazin/index.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(HERE, 'dist');
 const STATIC = path.join(HERE, 'static');
-const PAGES = { start, kleinbetrieb, zweijobs, mytime, preise, fragen, rechner, feierabend, nachweis, wochenende, impressum, datenschutz };
+const PAGES = {
+  start, kleinbetrieb, zweijobs, mytime, preise, fragen, rechner, feierabend, nachweis, wochenende, impressum, datenschutz,
+  // Magazin: index plus one page per article (data in site/src/magazin/)
+  magazin: magazinIndex, ...Object.fromEntries(ARTICLES.map((a) => [articleKey(a), articlePage(a)])),
+};
 /** Files from site/static that belong at the site root instead of /assets. */
 const ROOT_FILES = ['favicon.svg', 'favicon-32.png', 'apple-touch-icon.png'];
 
@@ -78,7 +86,7 @@ for (const [key, fn] of Object.entries(PAGES)) {
     if (!p.title || !p.desc || !p.body) throw new Error(`page ${key}/${lang} is missing title, desc or body`);
     if (p.desc.length > 200) console.warn(`warn: description of ${key}/${lang} is ${p.desc.length} characters`);
     write(ROUTES[key][lang], shell({ ...p, key, lang, cssVersion }));
-    META.push({ key, lang, title: p.title, desc: p.desc });
+    META.push({ key, lang, title: p.title, desc: p.desc, lastmod: p.lastmod });
   }
 }
 const nf = notFound();
@@ -87,7 +95,8 @@ write('/404.html', shell({ ...nf, key: 'start', lang: 'de', noindex: true, cssVe
 // ------------------------------------------------------------------ sitemap, robots, llms.txt
 const urls = Object.keys(PAGES).flatMap((key) => ['de', 'en'].map((lang) => {
   const alt = ['de', 'en'].map((l) => `<xhtml:link rel="alternate" hreflang="${l}" href="${SITE}${ROUTES[key][l]}"/>`).join('');
-  return `<url><loc>${SITE}${ROUTES[key][lang]}</loc><lastmod>${STAND.iso}</lastmod>${alt}</url>`;
+  const lastmod = (META.find((m) => m.key === key && m.lang === lang) || {}).lastmod || STAND.iso;
+  return `<url><loc>${SITE}${ROUTES[key][lang]}</loc><lastmod>${lastmod}</lastmod>${alt}</url>`;
 }));
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`);
@@ -110,6 +119,8 @@ fs.writeFileSync(path.join(DIST, 'llms.txt'), [
   '- Umzug: Import aus myTime und anderen Apps per CSV, Startsaldo für Überstunden und Resturlaub.',
   '- Rechtslage Überstunden (Deutschland): Wer Überstunden einklagt, muss sie darlegen und beweisen (BAG, 04.05.2022, 5 AZR 359/21), trotz der Erfassungspflicht nach EuGH C-55/18 und BAG 1 ABR 22/21.',
   '- Fieravend gibt Hinweise und ist keine Rechts- oder Steuerberatung.',
+  '- Haltung: Für dich, nicht für deinen Chef. Jede Stunde zählt, auch die nach Feierabend. Nachtragen ist erlaubt und wird als „nachgetragen“ markiert.',
+  '- Magazin: Artikel mit Quellen und Prüfdatum zu unbezahlten Überstunden, Arbeit am Abend, Überstunden-Nachweis, flexiblen Wochen, AD(H)S und Arbeitszeit weltweit (Seiten unten).',
   '',
   '## Seiten (Deutsch)',
   ...pageList('de'),

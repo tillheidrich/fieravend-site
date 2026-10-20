@@ -29,8 +29,8 @@ const UI = {
     claim: 'Damit dein Feierabend stimmt.',
     sender: 'Fieravend ist ein Werkzeug von <a href="https://heidrich-digital.de">Heidrich Digital</a>.',
     calm: 'Kein Konto, kein Tracking, keine Cookies. Fieravend ersetzt keine Rechts- oder Steuerberatung.',
-    links: [['kleinbetrieb', 'Für Kleinbetriebe'], ['zweijobs', 'Zwei Jobs'], ['preise', 'Preise'], ['fragen', 'Fragen'], ['rechner', 'Rechner']],
-    more: [['feierabend', 'Feierabend-Rechner'], ['nachweis', 'Überstunden nachweisen'], ['wochenende', 'Wochenende und Feiertage'], ['mytime', 'Umzug von myTime']],
+    links: [['kleinbetrieb', 'Für Kleinbetriebe'], ['zweijobs', 'Zwei Jobs'], ['preise', 'Preise'], ['fragen', 'Fragen'], ['rechner', 'Rechner'], ['magazin', 'Magazin']],
+    more: [['feierabend', 'Feierabend-Rechner'], ['nachweis', 'Überstunden nachweisen'], ['wochenende', 'Wochenende und Feiertage'], ['mag-laptop', 'Abends am Laptop'], ['mag-adhs', 'Zeit erfassen mit AD(H)S'], ['mytime', 'Umzug von myTime']],
     legal: [['impressum', 'Impressum'], ['datenschutz', 'Datenschutz']],
     footApp: 'Die App', footHelp: 'Hilfe und Rechtliches', mailLabel: 'Schreib uns',
     place: 'Gebaut in Tostedt bei Hamburg. Rechnet für Deutschland, Österreich, die Schweiz und die EU.',
@@ -42,8 +42,8 @@ const UI = {
     claim: 'So your hours add up.',
     sender: 'Fieravend is a tool by <a href="https://heidrich-digital.de">Heidrich Digital</a>.',
     calm: 'No account, no tracking, no cookies. Fieravend is not legal or tax advice.',
-    links: [['kleinbetrieb', 'Small businesses'], ['zweijobs', 'Two jobs'], ['preise', 'Pricing'], ['fragen', 'FAQ'], ['rechner', 'Calculator']],
-    more: [['feierabend', 'Finish-time calculator'], ['nachweis', 'Proving overtime'], ['wochenende', 'Weekend and holiday work'], ['mytime', 'Switch from myTime']],
+    links: [['kleinbetrieb', 'Small businesses'], ['zweijobs', 'Two jobs'], ['preise', 'Pricing'], ['fragen', 'FAQ'], ['rechner', 'Calculator'], ['magazin', 'Magazine']],
+    more: [['feierabend', 'Finish-time calculator'], ['nachweis', 'Proving overtime'], ['wochenende', 'Weekend and holiday work'], ['mag-laptop', 'Laptop in the evening'], ['mag-adhs', 'Tracking time with ADHD'], ['mytime', 'Switch from myTime']],
     legal: [['impressum', 'Legal notice'], ['datenschutz', 'Privacy']],
     footApp: 'The app', footHelp: 'Help and legal', mailLabel: 'Write to us',
     place: 'Made in Tostedt near Hamburg. Works for Germany, Austria, Switzerland and the EU.',
@@ -52,9 +52,9 @@ const UI = {
 };
 
 /** Short page names for breadcrumbs (BreadcrumbList) */
-const CRUMB = {
-  de: { start: 'Fieravend', kleinbetrieb: 'Für Kleinbetriebe', zweijobs: 'Zwei Jobs', mytime: 'Umzug von myTime', preise: 'Preise', fragen: 'Fragen', rechner: 'Überstundenrechner', feierabend: 'Feierabend-Rechner', nachweis: 'Überstunden nachweisen', wochenende: 'Wochenende und Feiertage', datenschutz: 'Datenschutz', impressum: 'Impressum' },
-  en: { start: 'Fieravend', kleinbetrieb: 'Small businesses', zweijobs: 'Two jobs', mytime: 'Switch from myTime', preise: 'Pricing', fragen: 'FAQ', rechner: 'Overtime calculator', feierabend: 'Finish-time calculator', nachweis: 'Proving overtime', wochenende: 'Weekend and holiday work', datenschutz: 'Privacy', impressum: 'Legal notice' },
+export const CRUMB = {
+  de: { magazin: 'Magazin', start: 'Fieravend', kleinbetrieb: 'Für Kleinbetriebe', zweijobs: 'Zwei Jobs', mytime: 'Umzug von myTime', preise: 'Preise', fragen: 'Fragen', rechner: 'Überstundenrechner', feierabend: 'Feierabend-Rechner', nachweis: 'Überstunden nachweisen', wochenende: 'Wochenende und Feiertage', datenschutz: 'Datenschutz', impressum: 'Impressum' },
+  en: { magazin: 'Magazine', start: 'Fieravend', kleinbetrieb: 'Small businesses', zweijobs: 'Two jobs', mytime: 'Switch from myTime', preise: 'Pricing', fragen: 'FAQ', rechner: 'Overtime calculator', feierabend: 'Finish-time calculator', nachweis: 'Proving overtime', wochenende: 'Weekend and holiday work', datenschutz: 'Privacy', impressum: 'Legal notice' },
 };
 
 /** The publisher, shared by every page's structured data. */
@@ -112,10 +112,9 @@ export function shell(page) {
   const scripts = (page.scripts || []).map((s) => `<script src="${s}" defer></script>`).join('');
   const graph = [].concat(page.jsonld || []);
   if (page.key !== 'start' && !page.noindex) {
-    graph.push({ '@type': 'BreadcrumbList', itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Fieravend', item: SITE + href('start', page.lang) },
-      { '@type': 'ListItem', position: 2, name: CRUMB[page.lang][page.key], item: canonical },
-    ] });
+    // page.crumbs: [[name, key], …] between the start page and this page (e.g. the magazine index for an article)
+    const trail = [['Fieravend', 'start'], ...(page.crumbs || []), [page.crumb || CRUMB[page.lang][page.key], page.key]];
+    graph.push({ '@type': 'BreadcrumbList', itemListElement: trail.map(([name, key], i) => ({ '@type': 'ListItem', position: i + 1, name, item: SITE + href(key, page.lang) })) });
   }
   const ld = graph.length
     ? `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph.map((g) => { const { '@context': _, ...rest } = g; return rest; }) }).replace(/</g, '\\u003c')}</script>`
@@ -134,7 +133,7 @@ ${page.noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonica
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#FAF6EF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121826" media="(prefers-color-scheme: dark)">
-<meta property="og:type" content="website">
+<meta property="og:type" content="${page.ogType || 'website'}">${page.published ? `<meta property="article:published_time" content="${page.published}"><meta property="article:modified_time" content="${page.modified || page.published}">` : ''}
 <meta property="og:site_name" content="Fieravend">
 <meta property="og:locale" content="${page.lang === 'de' ? 'de_DE' : 'en_GB'}">
 <meta property="og:title" content="${esc(page.title)}">

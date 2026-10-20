@@ -1,6 +1,8 @@
 /**
  * Site-wide constants. Change them here, never in the page files.
  */
+import { MAG_ROUTES } from './magazin/index.mjs';
+
 export const SITE = 'https://fieravend.heidrich-digital.de';
 
 /**
@@ -44,6 +46,8 @@ export const ROUTES = {
   wochenende:   { de: '/ratgeber/wochenende-feiertage/', en: '/en/guide/weekend-and-holiday-work/' },
   datenschutz:  { de: '/datenschutz/',           en: '/en/privacy/' },
   impressum:    { de: '/impressum/',             en: '/en/legal-notice/' },
+  // Magazin index and articles (site/src/magazin/index.mjs)
+  ...MAG_ROUTES,
 };
 
 /**

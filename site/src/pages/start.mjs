@@ -10,6 +10,7 @@ import { horizon } from '../art.mjs';
 import { href, ORG } from '../layout.mjs';
 import { MAIL, SITE, ROUTES, APP_STORE_URL } from '../config.mjs';
 import { feierabendClock } from '../feierabend.mjs';
+import { magazinTeaser } from './magazin.mjs';
 import { todayScreen, monthScreen, calendarScreen, overviewScreen, proofSheet, hintFragment, clockStages, holidaysFragment, leaveFragment, jobsFragment, countriesFragment } from '../screens.mjs';
 
 const C = {
@@ -25,6 +26,17 @@ const C = {
       targets: [['6:00', '6:00 Std.'], ['7:48', '7:48 Std.'], ['8:00', '8:00 Std.'], ['8:24', '8:24 Std.']],
       outLabel: 'Feierabend um', pause: 'mit 30 Minuten Pause nach § 4 ArbZG',
     },
+    rightsH: 'Für dich, nicht für deinen Chef.',
+    rightsP: 'Deine Stunden gehören dir. Kein Konto, kein Server, niemand schaut mit. Fieravend zählt für dich, ruhig und ohne Rot, und sagt dir, was das Gesetz dazu vorsieht.',
+    rights: [
+      ['Jede Stunde zählt. Auch die nach Feierabend.', 'Mails um 21 Uhr sind Arbeitszeit, egal wo du sitzt. Trag sie nach, Fieravend markiert sie ehrlich als nachgetragen.', 'mag-laptop', 'Abends am Laptop: Ist das Arbeitszeit?'],
+      ['Früher gehen, wenn die Woche passt.', 'Fieravend zeigt dir die Woche, nicht nur den Tag. Ob du heute früher gehen kannst, regelt dein Vertrag. Die Rechnung dafür hast du hier.', 'mag-frueher', 'Wann die Woche trotzdem passt'],
+      ['Festhalten, wer es wollte.', 'Für bezahlte Überstunden zählt auch, wer sie veranlasst hat. Eine kurze Notiz am Block reicht, am selben Tag.', 'mag-angeordnet', 'Wer hat die Überstunden angeordnet?'],
+      ['Einmal zahlen, nichts verlieren.', 'Kein Abo. Nach dem Test bleibt die Basis ohne Kauf, und ein Backup deiner Daten geht immer.', 'preise', 'Preise und Basis'],
+    ],
+    rightsNote: 'Fieravend gibt Hinweise und ist keine Rechtsberatung. Die Preise sind geplant, bis zum Start kann sich etwas ändern.',
+    magH: 'Aus dem Magazin.',
+    magMore: 'Alle Artikel',
     whyH: 'Ohne Zettel verschenkst du Stunden.',
     whyP: 'Früher hing die Stempeluhr im Flur, und die Karte zeigte schwarz auf weiß, wann du gekommen und gegangen bist. In vielen Betrieben gibt es heute gar nichts mehr. Zehn Minuten früher da, zwanzig länger geblieben, die Pause wieder kurz. Das fällt niemandem auf, auch dir nicht. Fieravend ist deine Stempelkarte in der Tasche.',
     whyLink: 'Wenn dein Betrieb kein System hat',
@@ -103,6 +115,17 @@ const C = {
       targets: [['6:00', '6:00 h'], ['7:48', '7:48 h'], ['8:00', '8:00 h'], ['8:24', '8:24 h']],
       outLabel: 'You finish at', pause: 'with a 30 minute break (§ 4 ArbZG, Germany)',
     },
+    rightsH: 'For you, not for your boss.',
+    rightsP: 'Your hours belong to you. No account, no server, nobody looking over your shoulder. Fieravend counts for you, calmly and without red, and tells you what the law says about it.',
+    rights: [
+      ['Every hour counts. Even after work.', 'Emails at 9 pm are working time, wherever you sit. Add them later, and Fieravend honestly marks them as added later.', 'mag-laptop', 'Laptop in the evening: does it count?'],
+      ['Leave early when your week adds up.', 'Fieravend shows you the week, not just the day. Whether you can leave early today is up to your contract. The numbers for it are right here.', 'mag-frueher', 'When your week still adds up'],
+      ['Note who wanted it.', 'For paid overtime, it also matters who caused it. A short note on the block is enough, on the same day.', 'mag-angeordnet', 'Who ordered the overtime?'],
+      ['Pay once, lose nothing.', 'No subscription. After the trial the basic version stays without buying anything, and backing up your data always works.', 'preise', 'Pricing and Basic'],
+    ],
+    rightsNote: 'Fieravend gives hints and is not legal advice. Prices are planned and may change before launch.',
+    magH: 'From the magazine.',
+    magMore: 'All articles',
     whyH: 'Without a record you give hours away.',
     whyP: 'There used to be a time clock in the hallway, and the card showed in black and white when you came and went. Many workplaces have nothing at all now. Ten minutes early, twenty minutes late, a short break again. Nobody notices, not even you. Fieravend is the time card in your pocket.',
     whyLink: 'When your workplace has no system',
@@ -187,6 +210,7 @@ export default function start(lang) {
   const rows = c.priceRows.map(([k, ...v]) => `<tr><th scope="row">${k}</th>${v.map((x, i) => `<td class="${i === 3 ? 'is-rec' : ''}">${x}</td>`).join('')}</tr>`).join('');
   const blocks = c.plans.map(([n, p, s], i) => `<li class="pp${i === 3 ? ' is-rec' : ''}"><h3 class="pp-h"><span>${n}</span> <span class="num">${p}</span></h3><p class="pt-per">${s}</p><dl>${c.priceRows.map(([k, ...v]) => `<div><dt>${k}</dt><dd>${v[i]}</dd></div>`).join('')}</dl></li>`).join('');
   const faq = c.faq.map(([q, a], i) => `<details class="tile" name="faq"${i === 0 ? ' open' : ''}><summary><span>${q}</span><span class="tile-x" aria-hidden="true"></span></summary><p>${a}</p></details>`).join('');
+  const rights = c.rights.map(([h, p, k, l], i) => `<li class="rights-item${i === 0 || i === 3 ? ' is-key' : ''}"><h3>${h}</h3><p>${p}</p><p><a class="more" href="${href(k, lang)}">${l}${arrow}</a></p></li>`).join('');
   const d = c.dlg;
   const places = d.places.map((p, i) => `<label class="seg-o"><input type="radio" name="dlg-place" value="${p}"${i === 0 ? ' checked' : ''}><span>${p}</span></label>`).join('');
   const photo = (file, w, h, alt, cls = '') => `<picture class="${cls}"><source srcset="/assets/photos/${file}.webp" type="image/webp"><img src="/assets/photos/${file}.jpg" alt="${alt}" width="${w}" height="${h}" loading="lazy" decoding="async"></picture>`;
@@ -214,6 +238,14 @@ export default function start(lang) {
     </div>
     <figure class="why-a reveal">${photo('stempeluhr-hannover', 1200, 1172, c.photo1)}<figcaption>${c.photo1}</figcaption></figure>
     <figure class="why-b reveal">${photo('stempelkarten', 1000, 1330, c.photo2)}<figcaption>${c.photo2}</figcaption></figure>
+  </div>
+</section>
+
+<section class="rights" aria-labelledby="rights">
+  <div class="wrap">
+    <div class="rights-head reveal"><h2 id="rights">${c.rightsH}</h2><p>${c.rightsP}</p></div>
+    <ul class="rights-list">${rights}</ul>
+    <p class="rights-small">${c.rightsNote}</p>
   </div>
 </section>
 
@@ -273,6 +305,13 @@ export default function start(lang) {
   <div class="wrap faqs-grid">
     <div class="faqs-head"><h2 id="faqs">${c.faqH}</h2><p><a class="more" href="${href('fragen', lang)}">${c.faqMore}${arrow}</a></p></div>
     <div class="tiles">${faq}</div>
+  </div>
+</section>
+
+<section class="mag-teaser" aria-labelledby="mag-t">
+  <div class="wrap">
+    <div class="mag-teaser-head"><h2 id="mag-t">${c.magH}</h2><p><a class="more" href="${href('magazin', lang)}">${c.magMore}${arrow}</a></p></div>
+    ${magazinTeaser(lang, 3)}
   </div>
 </section>
 
