@@ -41,6 +41,7 @@ export const ROUTES = {
   rechner:      { de: '/rechner/ueberstunden/',  en: '/en/calculator/overtime/' },
   feierabend:   { de: '/rechner/feierabend/',    en: '/en/calculator/finish-time/' },
   nachweis:     { de: '/ratgeber/ueberstunden-nachweisen/', en: '/en/guide/prove-overtime/' },
+  wochenende:   { de: '/ratgeber/wochenende-feiertage/', en: '/en/guide/weekend-and-holiday-work/' },
   datenschutz:  { de: '/datenschutz/',           en: '/en/privacy/' },
   impressum:    { de: '/impressum/',             en: '/en/legal-notice/' },
 };

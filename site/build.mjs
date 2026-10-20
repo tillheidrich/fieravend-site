@@ -27,12 +27,13 @@ import fragen from './src/pages/fragen.mjs';
 import rechner from './src/pages/rechner.mjs';
 import feierabend from './src/pages/feierabend.mjs';
 import nachweis from './src/pages/nachweis.mjs';
+import wochenende from './src/pages/wochenende.mjs';
 import { impressum, datenschutz, notFound } from './src/pages/legal.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(HERE, 'dist');
 const STATIC = path.join(HERE, 'static');
-const PAGES = { start, kleinbetrieb, zweijobs, mytime, preise, fragen, rechner, feierabend, nachweis, impressum, datenschutz };
+const PAGES = { start, kleinbetrieb, zweijobs, mytime, preise, fragen, rechner, feierabend, nachweis, wochenende, impressum, datenschutz };
 /** Files from site/static that belong at the site root instead of /assets. */
 const ROOT_FILES = ['favicon.svg', 'favicon-32.png', 'apple-touch-icon.png'];
 

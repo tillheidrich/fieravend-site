@@ -24,13 +24,18 @@ const C = {
         ['Ich nutze schon myTime oder Excel. Muss ich von vorn anfangen?', 'Nein. Du nimmst deine Einträge als CSV-Datei mit und trägst deinen aktuellen Überstunden- und Urlaubsstand als Startwert ein. MYTIME'],
         ['Was passiert, wenn ich mein iPhone verliere?', 'Mit iCloud sind deine Daten auf deinen anderen Geräten und kommen auf ein neues iPhone mit. Ohne iCloud mach ab und zu ein Backup. Fieravend erinnert dich daran.'],
       ]],
+      ['Wochenende, Feiertage, Schicht', [
+        ['Was passiert, wenn ich an einem Feiertag oder am Wochenende arbeite?', 'Ist der Tag für dich sonst frei, ist dein Soll null und jede Stunde ein Plus. Gehört der Samstag zu deinen festen Arbeitstagen, gilt dort dein normales Soll. WEEKEND'],
+        ['Ich arbeite nach Dienstplan, mal montags, mal samstags. Geht das?', 'Ja. Mit dem Modell „Wechselnde Tage (Dienstplan)“ zählt dein Soll pro Woche. Du kannst deine Dienste vorab eintragen; ein Feiertag senkt dein Soll nur, wenn an dem Tag ein Dienst geplant war.'],
+        ['Steht mir für einen gearbeiteten Sonntag ein freier Tag zu?', 'In Deutschland ja, ein Ersatzruhetag innerhalb von zwei Wochen, für einen Feiertag innerhalb von acht Wochen (§ 11 ArbZG). Fieravend erinnert dich daran, und du trägst ihn als „Ersatzruhetag“ ein.'],
+      ]],
       ['Länder und Geräte', [
         ['Gilt Fieravend auch in Österreich und der Schweiz?', 'Ja. Fieravend rechnet Feiertage, Pausen und Ruhezeiten für Deutschland, Österreich und die Schweiz nach dem jeweiligen Gesetz. Welches Land gilt, hängt am Arbeitsort deines Jobs, nicht an der Sprache deines iPhones. In den anderen EU-Ländern nutzt Fieravend die Grundregeln der EU-Arbeitszeitrichtlinie (2003/88/EG).'],
         ['Wann kommt Fieravend in den App Store?', 'Bald. Ein Datum gibt es noch nicht. Schreib uns eine Mail, dann sagen wir dir Bescheid.'],
         ['Gibt es Fieravend für Android?', 'Noch nicht. Erst kommt das iPhone, dann sehen wir weiter. Wenn du Bescheid bekommen willst, schreib uns eine Mail mit dem Betreff „Android“.'],
       ]],
     ],
-    prices: 'Preise ansehen', mytime: 'So geht der Umzug',
+    prices: 'Preise ansehen', mytime: 'So geht der Umzug', weekend: 'Mehr zu Wochenende und Feiertagen',
   },
   en: {
     title: 'FAQ · Fieravend',
@@ -50,22 +55,27 @@ const C = {
         ['I already use myTime or Excel. Do I have to start over?', 'No. You bring your entries along as a CSV file and enter your current overtime and leave balance as a starting point. MYTIME'],
         ['What happens if I lose my iPhone?', 'With iCloud your data is on your other devices and moves to a new iPhone. Without iCloud, make a backup now and then. Fieravend reminds you.'],
       ]],
+      ['Weekends, holidays, shifts', [
+        ['What if I work on a public holiday or at the weekend?', 'If the day would otherwise be off, your target is zero and every hour is plus. If Saturday is one of your fixed working days, your normal target applies there. WEEKEND'],
+        ['I work to a rota, sometimes Mondays, sometimes Saturdays. Does that work?', 'Yes. With the “Changing days (rota)” model your target counts per week. You can enter your shifts in advance; a public holiday only lowers your target if a shift was planned that day.'],
+        ['Do I get a day off for a Sunday I worked?', 'In Germany yes, a replacement rest day within two weeks, for a public holiday within eight weeks (§ 11 ArbZG). Fieravend reminds you, and you enter it as “Replacement rest day”.'],
+      ]],
       ['Countries and devices', [
         ['Does Fieravend work in Austria and Switzerland?', 'Yes. Fieravend handles public holidays, breaks and rest times for Germany, Austria and Switzerland under each country’s law. The country comes from where your job is, not from your iPhone’s language. In other EU countries Fieravend uses the basic rules of the EU Working Time Directive (2003/88/EC).'],
         ['When will Fieravend be in the App Store?', 'Soon. There is no date yet. Send us an email and we will let you know.'],
         ['Is there an Android version?', 'Not yet. The iPhone comes first, then we will see. If you want to hear about it, send us an email with the subject “Android”.'],
       ]],
     ],
-    prices: 'See pricing', mytime: 'How switching works',
+    prices: 'See pricing', mytime: 'How switching works', weekend: 'More on weekend and holiday work',
   },
 };
 
 export default function fragen(lang) {
   const c = C[lang];
-  const fix = (a) => a.replace('PRICES', `<a href="${href('preise', lang)}">${c.prices}</a>`).replace('MYTIME', `<a href="${href('mytime', lang)}">${c.mytime}</a>`);
+  const fix = (a) => a.replace('PRICES', `<a href="${href('preise', lang)}">${c.prices}</a>`).replace('MYTIME', `<a href="${href('mytime', lang)}">${c.mytime}</a>`).replace('WEEKEND', `<a href="${href('wochenende', lang)}">${c.weekend}</a>`);
   const groups = c.groups.map(([g, qs], gi) => `<div class="faq-group"><h2 id="g${gi}">${g}</h2>` +
     qs.map(([q, a]) => `<details class="faq"><summary><h3>${q}</h3></summary><p>${fix(a)}</p></details>`).join('') + '</div>').join('');
-  const strip = (s) => s.replace(/ (PRICES|MYTIME)$/, '');
+  const strip = (s) => s.replace(/ (PRICES|MYTIME|WEEKEND)$/, '');
   const jsonld = {
     '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang,
     mainEntity: c.groups.flatMap(([, qs]) => qs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: strip(a) } }))),

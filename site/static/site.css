@@ -744,3 +744,6 @@ select { max-width: 16rem; }
 .head-art .fa { margin-inline: auto; }
 .hero-tool { display: grid; gap: .75rem; justify-items: center; width: min(100%, 30rem); }
 .hero-tool-more { margin: 0; font-size: .9375rem; text-align: center; }
+
+.cmp-pay th { text-align: left; font-weight: 500; }
+.cmp-pay td { text-align: left; width: auto; font-weight: 600; }
