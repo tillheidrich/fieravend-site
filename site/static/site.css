@@ -52,6 +52,11 @@
   --fv-night-muted: #C7CCD8;
   --fv-night-link: #F5A06A;
   --fv-night-accent: #F08A4B;
+  --fv-sky-morning: #F4E4D4;
+  --fv-sky-day: #E3ECF4;
+  --fv-sky-evening: #F5D2B8;
+  --fv-sky-night: #1F2B45;
+  --fv-sky-ink: #1F2B45;
 
   --fv-font: "Figtree", ui-rounded, system-ui, sans-serif;
   /* five type steps */
@@ -98,6 +103,11 @@
     --fv-night-muted: #B3AEA6;
     --fv-night-link: #F5A06A;
     --fv-night-accent: #F08A4B;
+    --fv-sky-morning: #2A2A3D;
+    --fv-sky-day: #1E2A40;
+    --fv-sky-evening: #3A2730;
+    --fv-sky-night: #0B0F18;
+    --fv-sky-ink: #F4EFE6;
   }
 }
 
@@ -463,7 +473,7 @@ html:not(.js) .day-step h3 { color: var(--fv-text); }
 .ui-row-sum > span:first-child { color: var(--ui-text); font-weight: 600; }
 .ui-sub { font-weight: 650; font-size: .875rem; }
 .ui-sub-gap { margin-top: 6px; }
-.ui-tabs { margin-top: auto; display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 4px 20px; border-top: 1px solid var(--ui-line); background: var(--ui-bg); margin-inline: -16px; } /* taste-skill-ignore: overlay, form field or inside an app fragment */
+.ui-tabs { margin-top: auto; display: grid; grid-template-columns: repeat(5, 1fr); padding: 8px 4px 20px; border-top: 1px solid var(--ui-line); background: var(--ui-bg); margin-inline: -16px; } /* taste-skill-ignore: overlay, form field or inside an app fragment */
 .ui-tab { display: grid; justify-items: center; gap: 3px; font-size: .6875rem; font-weight: 600; color: var(--ui-muted); }
 .ui-tab svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .ui-tab.is-on { color: var(--fv-accent-strong); }
@@ -747,3 +757,90 @@ select { max-width: 16rem; }
 
 .cmp-pay th { text-align: left; font-weight: 500; }
 .cmp-pay td { text-align: left; width: auto; font-weight: 600; }
+
+/* ============================================================ "Abendlicht 2" app screens (docs/design-abendlicht-2.md) */
+.ui-in-sky { padding: 0; gap: 0; }
+.ui-sky { display: grid; gap: 4px; padding: 26px 16px 14px; color: var(--fv-sky-ink); }
+.sky-morning { background: var(--fv-sky-morning); }
+.sky-day { background: var(--fv-sky-day); }
+.sky-evening { background: var(--fv-sky-evening); }
+.sky-night { background: var(--fv-sky-night); }
+.ui-sky .ui-date { color: var(--fv-sky-ink); opacity: 1; }
+.ui-sky-top { display: grid; }
+.ui-sky-arc { width: 100%; height: auto; margin-top: -4px; }
+.sky-arc { fill: none; stroke: var(--fv-sky-ink); stroke-width: 1.5; stroke-dasharray: 2 5; opacity: .55; }
+.sky-sun { fill: var(--fv-accent-strong); }
+.sky-horizon { stroke: var(--fv-sky-ink); stroke-width: 2.5; }
+.sky-label { fill: var(--fv-sky-ink); font-size: 11px; font-weight: 600; text-anchor: middle; }
+.ui-sig { display: grid; justify-items: center; text-align: center; margin-top: -6px; }
+.ui-sig-l { font-size: .8125rem; font-weight: 600; }
+.ui-sig-n { font-size: 3rem; font-weight: 650; line-height: 1; letter-spacing: -.03em; }
+.ui-sig-s { font-size: .8125rem; font-weight: 550; }
+.ui-pad { display: grid; gap: 10px; padding: 12px 16px 0; }
+.ui-card-tight { gap: 6px; padding: 10px 12px; }
+.db { width: 100%; height: auto; display: block; }
+.db-track { fill: var(--ui-bg); }
+.db-block { fill: var(--fv-secondary); }
+.db-block.job-a { fill: var(--fv-accent); }
+.db-block.is-late { fill: none; stroke: var(--fv-accent); stroke-width: 1.5; stroke-dasharray: 3 2; }
+.db-now { stroke: var(--ui-text); stroke-width: 2; stroke-linecap: round; }
+.db-end { fill: var(--ui-card); stroke: var(--fv-accent-strong); stroke-width: 2; }
+.db-tick { fill: var(--ui-muted); font-size: 9px; text-anchor: middle; }
+.db-mini { max-width: 120px; }
+.ws { width: 100%; height: auto; display: block; }
+.ws-track { fill: var(--ui-bg); }
+.ws-bar { fill: var(--fv-plus); }
+.is-today .ws-bar { fill: var(--fv-accent); }
+.is-today .ws-track { stroke: var(--fv-accent); stroke-width: 1.5; }
+.is-future .ws-track { opacity: .5; }
+.ws-target { stroke: var(--ui-text); stroke-width: 1.5; stroke-dasharray: 3 2; }
+.ws-day { fill: var(--ui-muted); font-size: 10px; font-weight: 600; text-anchor: middle; }
+.is-today .ws-day { fill: var(--ui-text); }
+.ws-diff { fill: var(--ui-text); font-size: 10px; font-weight: 650; text-anchor: middle; }
+.ws-diff.plus { fill: var(--fv-plus); }
+.ws-diff.minus { fill: var(--fv-minus); }
+.ui-monthbar { display: flex; align-items: center; justify-content: center; gap: 14px; background: var(--ui-card); border-radius: 999px; padding: 6px 14px; align-self: center; font-size: .9375rem; }
+.ui-chev { color: var(--fv-accent-strong); font-weight: 700; }
+.ui-day-band > span:nth-child(2) { display: grid; gap: 3px; }
+.ui-day-t { font-size: .75rem; color: var(--ui-muted); display: flex; gap: 6px; flex-wrap: wrap; }
+.ui-foot { display: flex; justify-content: space-between; gap: 8px; background: var(--ui-card); border-radius: 14px; padding: 10px 12px; font-size: .8125rem; color: var(--ui-muted); }
+.ui-foot b { color: var(--ui-text); }
+.ui-foot b.plus { color: var(--fv-plus); }
+.hm { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.hm-h { font-size: .6875rem; font-weight: 650; color: var(--ui-muted); text-align: center; }
+.hm-c { display: grid; align-content: start; gap: 1px; min-height: 40px; border-radius: 8px; padding: 3px 4px; background: var(--ui-bg); font-size: .6875rem; }
+.hm-c b { font-size: .75rem; font-weight: 650; }
+.hm-c i { font-style: normal; font-size: .625rem; font-weight: 600; }
+.hm-c svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hm-empty { background: transparent; }
+.hm-future { opacity: .55; }
+.hm-z { background: #E9E9E3; }
+.hm-p1 { background: #D9EBDD; }
+.hm-p2 { background: #A9D3B5; }
+.hm-p3 { background: #2A7348; color: #FFFFFF; }
+.hm-m1 { background: #F7E2D6; }
+.hm-m2 { background: #EFC0A6; }
+.hm-m3 { background: #A9481A; color: #FFFFFF; }
+.hm-hol { background: #E3E8F3; color: #33466F; }
+.hm-vac { background: #F6E8C6; color: #6B4A00; }
+.hm-c.is-today { box-shadow: inset 0 0 0 2px var(--fv-accent-strong); } /* taste-skill-ignore: inside an app fragment */
+@media (prefers-color-scheme: dark) {
+  .hm-z { background: #252F45; } .hm-p1 { background: #1F3A2B; } .hm-p2 { background: #2C5B3E; } .hm-p3 { background: #5FC98A; color: #121826; }
+  .hm-m1 { background: #3A2A25; } .hm-m2 { background: #6B3A22; } .hm-m3 { background: #F5A06A; color: #121826; }
+  .hm-hol { background: #253049; color: #C7D2EA; } .hm-vac { background: #3A3220; color: #F2D58A; }
+}
+.hm-legend { display: flex; align-items: center; gap: 6px; font-size: .75rem; color: var(--ui-muted); justify-content: center; }
+.hm-legend .hm-c { min-height: 12px; width: 18px; padding: 0; }
+.ui-hero-xl { font-size: 3rem; }
+.sp { width: 100%; height: auto; display: block; }
+.sp-line { fill: none; stroke: var(--fv-plus); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.sp-dot { fill: var(--fv-plus); }
+.sp-last { fill: var(--fv-accent); stroke: var(--ui-card); stroke-width: 2; }
+.sp-m { fill: var(--ui-muted); font-size: 9px; text-anchor: middle; }
+.lv-row { display: grid; grid-template-columns: repeat(17, 1fr); gap: 4px; }
+.lv { display: block; aspect-ratio: 1; border-radius: 50%; }
+.lv-taken { background: var(--fv-plus); }
+.lv-planned { box-shadow: inset 0 0 0 2px var(--fv-plus); } /* taste-skill-ignore: inside an app fragment */
+.lv-free { background: var(--ui-line); }
+.lv-key { display: flex; align-items: center; gap: 6px; font-size: .75rem; color: var(--ui-muted); }
+.lv-key .lv { width: 10px; }

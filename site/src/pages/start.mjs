@@ -9,7 +9,7 @@
 import { href, ORG } from '../layout.mjs';
 import { MAIL, SITE, ROUTES, APP_STORE_URL } from '../config.mjs';
 import { feierabendClock } from '../feierabend.mjs';
-import { todayScreen, monthScreen, overviewScreen, proofSheet, hintFragment, clockStages, holidaysFragment, leaveFragment, jobsFragment, countriesFragment } from '../screens.mjs';
+import { todayScreen, monthScreen, calendarScreen, overviewScreen, proofSheet, hintFragment, clockStages, holidaysFragment, leaveFragment, jobsFragment, countriesFragment } from '../screens.mjs';
 
 const C = {
   de: {
@@ -31,9 +31,10 @@ const C = {
     photo2: 'Stempeluhr mit Kartenfächern für Kommen und Gehen, in einem Museum.',
     showH: 'So sieht Fieravend aus.',
     show: [
-      ['Heute', 'Ein großer Knopf zum Stempeln. Darüber, wie viel heute noch fehlt, darunter dein Saldo.'],
-      ['Monat', 'Jeder Tag mit Zeiten und Differenz. Feiertage und Urlaub stehen schon drin.'],
-      ['Übersicht', 'Dein Überstundenkonto über die Wochen und wie viel Urlaub noch frei ist.'],
+      ['Stempeln', 'Der Himmel folgt deinem Tag, die Sonne wandert bis zum Feierabend. Darunter dein Tag als Band und die Woche auf einen Blick.'],
+      ['Monat', 'Jeder Tag mit seinen Zeiten als Band und der Differenz. Feiertage und Urlaub stehen schon drin.'],
+      ['Kalender', 'Der Monat als Farbfeld: grün für Plus, Abendrot für Minus, Sonne für Urlaub, Fahne für Feiertag.'],
+      ['Übersicht', 'Dein Überstundenkonto wie ein Kontostand über zwölf Monate, dein Urlaub als Punkte.'],
       ['Nachweis', 'Der Stundenzettel als PDF. Nachgetragenes ist markiert, die Prüfsumme steht unten.'],
     ],
     showHint: 'Zum Blättern wischen oder mit den Pfeiltasten.',
@@ -108,9 +109,10 @@ const C = {
     photo2: 'Time clock with card racks for clocking in and out, in a museum.',
     showH: 'What Fieravend looks like.',
     show: [
-      ['Today', 'One big button to clock in. Above it what is left for today, below it your balance.'],
-      ['Month', 'Every day with times and difference. Public holidays and leave are already in.'],
-      ['Overview', 'Your overtime balance across the weeks and how much leave is still free.'],
+      ['Clock', 'The sky follows your day, the sun moves towards the end of work. Below it your day as a band and the week at a glance.'],
+      ['Month', 'Every day with its times as a band and the difference. Public holidays and leave are already in.'],
+      ['Calendar', 'The month as a colour field: green for plus, evening red for minus, a sun for leave, a flag for holidays.'],
+      ['Overview', 'Your overtime balance like a bank balance over twelve months, your leave as dots.'],
       ['Record', 'The time sheet as a PDF. Anything added later is marked, the checksum is at the bottom.'],
     ],
     showHint: 'Swipe or use the arrow keys to browse.',
@@ -174,7 +176,7 @@ const __mail = (c) => `mailto:${MAIL}?subject=${encodeURIComponent(c.mailSub)}&a
 
 export default function start(lang) {
   const c = C[lang];
-  const screens = [todayScreen(lang), monthScreen(lang), overviewScreen(lang), proofSheet(lang)];
+  const screens = [todayScreen(lang), monthScreen(lang), calendarScreen(lang), overviewScreen(lang), proofSheet(lang)];
   const panels = screens.map((s, i) => `<li class="rail-item"><figure class="rail-fig">${s}<figcaption><b>${c.show[i][0]}</b><span>${c.show[i][1]}</span></figcaption></figure></li>`).join('');
   const steps = c.day.map(([h, p], i) => `<li class="day-step" data-step="${['in', 'pause', 'out'][i]}"><h3>${h}</h3><p>${p}</p></li>`).join('');
   const frag = { holidays: holidaysFragment, leave: leaveFragment, hint: hintFragment, jobs: jobsFragment, proof: (l) => proofSheet(l, { crop: true }), countries: countriesFragment };

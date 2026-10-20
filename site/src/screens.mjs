@@ -81,55 +81,129 @@ const icons = {
   month: '<rect x="4" y="5" width="16" height="15" rx="2"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="9" y1="3" x2="9" y2="7"/><line x1="15" y1="3" x2="15" y2="7"/>',
   overview: '<line x1="6" y1="19" x2="6" y2="11"/><line x1="12" y1="19" x2="12" y2="5"/><line x1="18" y1="19" x2="18" y2="14"/>',
   more: '<circle cx="12" cy="12" r="9"/><circle cx="8" cy="12" r=".6"/><circle cx="12" cy="12" r=".6"/><circle cx="16" cy="12" r=".6"/>',
+  export: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 13h5M10 17h5"/>',
 };
 
 function tabbar(lang, active) {
-  const t = T[lang];
-  return `<span class="ui-tabs">${['today', 'month', 'overview', 'more'].map((k, i) =>
-    `<span class="ui-tab${k === active ? ' is-on' : ''}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${icons[k]}</svg>${t.tabs[i]}</span>`).join('')}</span>`;
+  // Tab order as in the app (myTime order): Mehr · Stempeln · Monat (middle) · Übersicht · Export.
+  const L = lang === 'de' ? ['Mehr', 'Stempeln', 'Monat', 'Übersicht', 'Export'] : ['More', 'Clock', 'Month', 'Overview', 'Export'];
+  const keys = ['more', 'today', 'month', 'overview', 'export'];
+  return `<span class="ui-tabs">${keys.map((k, i) =>
+    `<span class="ui-tab${k === active ? ' is-on' : ''}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${icons[k]}</svg>${L[i]}</span>`).join('')}</span>`;
 }
 
-/** "Heute" with the running clock. */
+/* Minutes since midnight → x on a band from `from` to `to` hours, width w. */
+const bx = (min, from, to, w) => ((min / 60 - from) / (to - from)) * w;
+const hm = (h, m) => h * 60 + m;
+
+/** Tagesband: blocks in job colour, gaps for breaks, now and Feierabend markers (spec "Abendlicht 2", section 2). */
+function dayBand({ blocks, now, end, from = 6, to = 18, w = 300, h = 34, mini = false, ticks = true }) {
+  const y = mini ? 4 : 8, bh = mini ? 10 : 16;
+  const bars = blocks.map(([s, e, cls]) => `<rect class="db-block ${cls || ''}" x="${bx(s, from, to, w).toFixed(1)}" y="${y}" width="${Math.max(2, bx(e, from, to, w) - bx(s, from, to, w)).toFixed(1)}" height="${bh}" rx="${bh / 2}"/>`).join('');
+  const nowM = now != null ? `<line class="db-now" x1="${bx(now, from, to, w).toFixed(1)}" y1="${y - 4}" x2="${bx(now, from, to, w).toFixed(1)}" y2="${y + bh + 4}"/>` : '';
+  const endM = end != null ? `<circle class="db-end" cx="${bx(end, from, to, w).toFixed(1)}" cy="${y + bh / 2}" r="${mini ? 3 : 5}"/>` : '';
+  const tk = ticks && !mini ? [6, 9, 12, 15, 18].filter((t) => t > from && t < to).map((t) => `<text class="db-tick" x="${bx(t * 60, from, to, w).toFixed(1)}" y="${h - 1}">${t}</text>`).join('') : '';
+  return `<svg class="db${mini ? ' db-mini' : ''}" viewBox="0 0 ${w} ${mini ? 18 : h}" aria-hidden="true" focusable="false"><rect class="db-track" x="0" y="${y}" width="${w}" height="${bh}" rx="${bh / 2}"/>${bars}${nowM}${endM}${tk}</svg>`;
+}
+
+/** "Heute" with the sky of the afternoon, the sun on its arc, the signature number, day band and week strip. */
 export function todayScreen(lang) {
   const t = T[lang];
-  const html = `<div class="ui-screen" data-ui role="img" aria-label="${t.todayAlt}"><div class="ui-in" aria-hidden="true">` +
-    `<span class="ui-large">${t.today}</span><span class="ui-date">${t.date}</span>` +
-    `<span class="ui-card ui-clock"><span class="ui-ring ui-ring-79"><svg viewBox="0 0 120 120"><circle class="ui-ring-track" cx="60" cy="60" r="52"/><circle class="ui-ring-fill" cx="60" cy="60" r="52"/></svg>` +
-    `<span class="ui-ring-in"><b class="ui-hero num">${t.worked}</b><span class="num">${t.toTarget}</span></span></span>` +
-    `<span class="ui-note">${t.since}</span><span class="ui-stamp">${t.out}</span>` +
-    `<span class="ui-pair"><span class="ui-ctl">${t.pause}</span><span class="ui-ctl">${t.moveStart}</span></span></span>` +
-    `<span class="ui-card ui-values"><span class="ui-row"><span>${t.overtime}</span><b class="plus num ui-big">+21:15</b></span>` +
-    `<span class="ui-row"><span>${t.week}</span><b class="plus num">+0:42</b></span>` +
-    `<span class="ui-row"><span>${t.holiday}</span><span>${t.holidayVal}</span></span></span>` +
+  const de = lang === 'de';
+  // 7:58 start, 7:48 target, 30 min break → Feierabend 16:16. Now 15:10: worked 6:42, 1:06 to go. Phase "Abend" (15–20).
+  const p = (hm(15, 10) - hm(7, 58)) / (hm(16, 16) - hm(7, 58));
+  const a = Math.PI * p, cx = (160 - 120 * Math.cos(a)).toFixed(1), cy = (118 - 120 * Math.sin(a) + 8).toFixed(1);
+  const week = de ? ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'] : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const vals = [[488, '+0:20'], [490, '+0:22'], [402, '6:42'], [0, ''], [0, ''], [0, ''], [0, '']];
+  const cols = vals.map(([m, d], i) => {
+    const x = 6 + i * 44, bh = Math.round((m / 600) * 56);
+    const cls = i === 2 ? ' is-today' : i > 2 ? ' is-future' : '';
+    return `<g class="ws-col${cls}"><rect class="ws-track" x="${x}" y="8" width="30" height="56" rx="6"/>` +
+      (m ? `<rect class="ws-bar" x="${x}" y="${64 - bh}" width="30" height="${bh}" rx="6"/>` : '') +
+      `<line class="ws-target" x1="${x - 2}" y1="${64 - Math.round((468 / 600) * 56)}" x2="${x + 32}" y2="${64 - Math.round((468 / 600) * 56)}"/>` +
+      `<text class="ws-day" x="${x + 15}" y="80">${week[i]}</text><text class="ws-diff ${sign(d)}" x="${x + 15}" y="94">${d}</text></g>`;
+  }).join('');
+  const alt = de
+    ? 'Fieravend, Seite Stempeln am Nachmittag: Himmel in Abendfarbe, die Sonne steht kurz vor dem Horizont. Feierabend um 16:16, noch 1:06. Tagesband von 7:58 bis jetzt mit Pause um 12:30. Wochenstreifen: Montag plus 0:20, Dienstag plus 0:22, heute 6:42.'
+    : 'Fieravend, Clock screen in the afternoon: evening sky, the sun just above the horizon. You finish at 16:16, 1:06 to go. Day band from 7:58 until now with a break at 12:30. Week strip: Monday plus 0:20, Tuesday plus 0:22, today 6:42.';
+  const html = `<div class="ui-screen" data-ui role="img" aria-label="${alt}"><div class="ui-in ui-in-sky" aria-hidden="true">` +
+    `<span class="ui-sky sky-evening"><span class="ui-sky-top"><span class="ui-large">${t.today}</span><span class="ui-date">${t.date}</span></span>` +
+    `<svg class="ui-sky-arc" viewBox="0 0 320 132" focusable="false"><defs><clipPath id="skyclip-${lang}"><rect x="0" y="0" width="320" height="126"/></clipPath></defs>` +
+    `<path class="sky-arc" d="M40 126 A120 120 0 0 1 280 126"/><g clip-path="url(#skyclip-${lang})"><circle class="sky-sun" cx="${cx}" cy="${cy}" r="15"/></g>` +
+    `<line class="sky-horizon" x1="0" y1="126" x2="320" y2="126"/><text class="sky-label" x="40" y="122">7:58</text><text class="sky-label sky-label-end" x="280" y="122">16:16</text></svg>` +
+    `<span class="ui-sig"><span class="ui-sig-l">${de ? 'Feierabend um' : 'You finish at'}</span><b class="ui-sig-n num">16:16</b><span class="ui-sig-s num">${de ? 'noch 1:06 · 6:42 heute' : '1:06 to go · 6:42 today'}</span></span></span>` +
+    `<span class="ui-pad"><span class="ui-stamp">${t.out}</span>` +
+    `<span class="ui-card ui-card-tight"><span class="ui-sub">${de ? 'Heute' : 'Today'}</span>${dayBand({ blocks: [[hm(7, 58), hm(12, 30), 'job-a'], [hm(13, 0), hm(15, 10), 'job-a']], now: hm(15, 10), end: hm(16, 16) })}</span>` +
+    `<span class="ui-card ui-card-tight"><span class="ui-row"><span class="ui-sub">${de ? 'Diese Woche' : 'This week'}</span><b class="plus num">+0:42</b></span>` +
+    `<svg class="ws" viewBox="0 0 312 100" focusable="false">${cols}</svg></span></span>` +
     `${tabbar(lang, 'today')}</div></div>`;
-  return shot('heute', lang, t.todayAlt, html);
+  return shot('heute', lang, alt, html);
 }
 
-/** "Monat" list for October. */
+/** "Monat" list for October, each day with its small day band. */
 export function monthScreen(lang) {
   const t = T[lang];
-  const rows = t.rows.map(([d, time, diff, kind]) => {
+  const bands = [[[hm(7, 52), hm(12, 15)], [hm(12, 45), hm(16, 20)]], [[hm(8, 0), hm(12, 0)], [hm(12, 30), hm(16, 15)]], null,
+    [[hm(7, 55), hm(12, 0)], [hm(12, 45), hm(16, 40)]], null, [[hm(8, 5), hm(12, 30)], [hm(13, 15), hm(17, 10)]], [[hm(7, 58), hm(12, 0), 'is-late'], [hm(12, 30), hm(15, 30), 'is-late']]];
+  const rows = t.rows.map(([d, time, diff, kind], i) => {
     const extra = kind === 'late' ? `<span class="ui-tag">${t.late}</span>` : '';
     const cls = kind === 'holiday' ? ' ui-day-off' : kind === 'leave' ? ' ui-day-leave' : '';
-    return `<span class="ui-day${cls}"><b>${d}</b><span class="num">${time}${extra}</span><span class="num ${sign(diff)}">${diff}</span></span>`;
+    const band = bands[i] ? dayBand({ blocks: bands[i].map(([s, e, c]) => [s, e, `job-a ${c || ''}`]), mini: true, from: 6, to: 19, w: 120 }) : '';
+    return `<span class="ui-day ui-day-band${cls}"><b>${d}</b><span class="num">${band || ''}<span class="ui-day-t">${time}${extra}</span></span><span class="num ${sign(diff)}">${diff}</span></span>`;
   }).join('');
   const html = `<div class="ui-screen" data-ui role="img" aria-label="${t.monthAlt}"><div class="ui-in" aria-hidden="true">` +
-    `<span class="ui-large">${t.month}</span><span class="ui-date">${t.monthSum} <b class="plus num">+0:05</b></span>` +
-    `<span class="ui-card ui-list">${rows}</span>${tabbar(lang, 'month')}</div></div>`;
+    `<span class="ui-monthbar"><span class="ui-chev">‹</span><b>${t.month}</b><span class="ui-chev">›</span></span>` +
+    `<span class="ui-card ui-list">${rows}</span>` +
+    `<span class="ui-foot"><span>${lang === 'de' ? '1.–8. Okt.' : '1–8 Oct'}</span><span><b class="num">46:53</b> ${lang === 'de' ? 'Std.' : 'h'}</span><span><b class="plus num">+0:05</b></span></span>` +
+    `${tabbar(lang, 'month')}</div></div>`;
   return shot('monat', lang, t.monthAlt, html);
 }
 
-/** "Übersicht": balance, eight weekly bars, leave. Bar heights are set by classes (no inline styles, CSP). */
+/** Month as a heat map (spec section 4): plus in three moss levels, minus in three evening levels, symbols for leave and holidays. */
+export function calendarScreen(lang) {
+  const de = lang === 'de';
+  // October 2026 starts on a Thursday. Diffs in minutes for worked days; 'h' holiday, 'v' vacation, '' free/future.
+  const days = { 1: 10, 2: -3, 3: 'h', 5: 12, 6: 'v', 7: 32, 8: -46, 9: 5, 12: 40, 13: -12, 14: 25, 15: 70, 16: 0, 19: 20, 20: 22 };
+  const lvl = (m) => (m >= 45 ? 'p3' : m >= 15 ? 'p2' : m > 0 ? 'p1' : m <= -45 ? 'm3' : m <= -15 ? 'm2' : m < 0 ? 'm1' : 'z');
+  const head = (de ? ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'] : ['M', 'T', 'W', 'T', 'F', 'S', 'S']).map((d) => `<span class="hm-h">${d}</span>`).join('');
+  let cells = '<span class="hm-c hm-empty"></span>'.repeat(3);
+  for (let d = 1; d <= 31; d++) {
+    const v = days[d];
+    const today = d === 21 ? ' is-today' : '';
+    if (v === 'h') cells += `<span class="hm-c hm-hol${today}"><b>${d}</b><svg viewBox="0 0 24 24" focusable="false"><path d="M6 20V4M6 5h10l-2 3 2 3H6"/></svg></span>`;
+    else if (v === 'v') cells += `<span class="hm-c hm-vac${today}"><b>${d}</b><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg></span>`;
+    else if (typeof v === 'number') cells += `<span class="hm-c hm-${lvl(v)}${today}"><b>${d}</b><i class="num">${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.floor(Math.abs(v) / 60)}:${String(Math.abs(v) % 60).padStart(2, '0')}</i></span>`;
+    else cells += `<span class="hm-c${today}${d > 21 ? ' hm-future' : ''}"><b>${d}</b></span>`;
+  }
+  const alt = de ? 'Fieravend, Monat als Kalender: jeder Tag farbig nach Plus oder Minus, Feiertag mit Fahne, Urlaub mit Sonne.' : 'Fieravend, month as a calendar: every day coloured by plus or minus, holiday with a flag, leave with a sun.';
+  const html = `<div class="ui-screen" data-ui role="img" aria-label="${alt}"><div class="ui-in" aria-hidden="true">` +
+    `<span class="ui-monthbar"><span class="ui-chev">‹</span><b>${de ? 'Oktober 2026' : 'October 2026'}</b><span class="ui-chev">›</span></span>` +
+    `<span class="ui-card"><span class="hm">${head}${cells}</span></span>` +
+    `<span class="hm-legend"><span class="hm-c hm-m2"></span>${de ? 'Minus' : 'Minus'}<span class="hm-c hm-z"></span>${de ? 'genau' : 'even'}<span class="hm-c hm-p2"></span>${de ? 'Plus' : 'Plus'}</span>` +
+    `${tabbar(lang, 'month')}</div></div>`;
+  return shot('kalender', lang, alt, html);
+}
+
+/** "Übersicht": account balance like a bank app with 12 month-end points, leave as a dot row. */
 export function overviewScreen(lang) {
   const t = T[lang];
-  const weeks = [['+0:40', 40], ['−0:15', -15], ['+1:10', 70], ['+0:20', 20], ['−0:30', -30], ['+0:45', 45], ['+0:03', 3], ['+0:22', 22]];
-  const bars = weeks.map(([label, m]) => `<span class="ui-bar ${m < 0 ? 'is-minus' : ''} h${Math.max(1, Math.round(Math.abs(m) / 10))}"><span class="ui-bar-v num">${label}</span></span>`).join('');
-  const leave = t.leaveRows.map(([k, v], i) => `<span class="ui-row${i === t.leaveRows.length - 1 ? ' ui-row-sum' : ''}"><span>${k}</span><b class="num">${v}</b></span>`).join('');
+  const de = lang === 'de';
+  const series = [520, 610, 700, 655, 760, 845, 900, 980, 1050, 1120, 1235, 1275]; // minutes, Nov–Oct; last = +21:15
+  const min = 480, max = 1300, W = 290, H = 70;
+  const pts = series.map((v, i) => [10 + (i * (W - 20)) / (series.length - 1), H - 8 - ((v - min) / (max - min)) * (H - 16)]);
+  const line = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+  const dots = pts.map(([x, y], i) => `<circle class="${i === pts.length - 1 ? 'sp-last' : 'sp-dot'}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${i === pts.length - 1 ? 4.5 : 2.5}"/>`).join('');
+  const months = de ? ['N', 'D', 'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O'] : ['N', 'D', 'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O'];
+  const labels = pts.map(([x], i) => `<text class="sp-m" x="${x.toFixed(1)}" y="${H + 10}">${months[i]}</text>`).join('');
+  const leave = Array.from({ length: 34 }, (_, i) => `<span class="lv ${i < 19 ? 'lv-taken' : i < 23 ? 'lv-planned' : 'lv-free'}"></span>`).join('');
   const html = `<div class="ui-screen" data-ui role="img" aria-label="${t.overAlt}"><div class="ui-in" aria-hidden="true">` +
     `<span class="ui-large">${t.over}</span>` +
-    `<span class="ui-card"><span class="ui-sub">${t.balance}</span><b class="ui-hero plus num">+21:15</b><span class="ui-note">${t.balanceSub}</span>` +
-    `<span class="ui-sub ui-sub-gap">${t.weeks}</span><span class="ui-bars">${bars}</span></span>` +
-    `<span class="ui-card ui-values"><span class="ui-sub">${t.leave}</span>${leave}</span>${tabbar(lang, 'overview')}</div></div>`;
+    `<span class="ui-card"><span class="ui-sub">${de ? 'Kontostand Überstunden' : 'Overtime balance'}</span><b class="ui-hero ui-hero-xl plus num">+21:15</b>` +
+    `<svg class="sp" viewBox="0 0 ${W} ${H + 14}" focusable="false"><path class="sp-line" d="${line}"/>${dots}${labels}</svg>` +
+    `<span class="ui-note">${de ? 'Saldo am Monatsende, letzte 12 Monate' : 'Balance at month end, last 12 months'}</span></span>` +
+    `<span class="ui-card"><span class="ui-row"><span class="ui-sub">${t.leave}</span><b class="num">${de ? '11 von 34 frei' : '11 of 34 free'}</b></span>` +
+    `<span class="lv-row">${leave}</span><span class="lv-key"><span class="lv lv-taken"></span>${de ? 'genommen' : 'taken'}<span class="lv lv-planned"></span>${de ? 'geplant' : 'planned'}<span class="lv lv-free"></span>${de ? 'frei' : 'free'}</span></span>` +
+    `${tabbar(lang, 'overview')}</div></div>`;
   return shot('uebersicht', lang, t.overAlt, html);
 }
 
