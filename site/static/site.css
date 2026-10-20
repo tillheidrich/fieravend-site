@@ -6,6 +6,7 @@
  * inside app fragments ([data-ui]), which keep the app's own radii and borders.
  * Contrast of every pair used here: node site/tools/check-contrast.mjs (runs in the build).
  * Motion: transform and opacity only, everything off with prefers-reduced-motion.
+ * Brand 2 (20.10.2026, docs/brand.md): mark "Sünn", headings and wordmark in Fraunces (SOFT 100), body in Figtree.
  */
 @font-face {
   font-family: "Figtree";
@@ -21,6 +22,23 @@
   font-weight: 300 900;
   font-display: swap;
   src: url("fonts/figtree-latin-ext-wght.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("fonts/fraunces-latin-var.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("fonts/fraunces-latin-ext-var.woff2") format("woff2");
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -46,6 +64,10 @@
   --fv-focus: #3D5A99;
   --fv-mark-line: #1F2B45;
   --fv-mark-water: #1F2B45;
+  --fv-mark-sky: #F5D2B8;
+  --fv-mark-sun: #D9652B;
+  --fv-mark-eye: #1F2B45;
+  --fv-mark-glint: #F08A4B;
   --fv-night-bg: #1F2B45;
   --fv-night-2: #2A3756;
   --fv-night-text: #F4F1EA;
@@ -57,8 +79,12 @@
   --fv-sky-evening: #F5D2B8;
   --fv-sky-night: #1F2B45;
   --fv-sky-ink: #1F2B45;
+  --fv-sky-muted: #4A3F3A;
+  --fv-sky-sea: #1F2B45;
+  --fv-sky-ink-on-sun: #1F2B45;
 
   --fv-font: "Figtree", ui-rounded, system-ui, sans-serif;
+  --fv-font-display: "Fraunces", Georgia, "Times New Roman", serif;
   /* five type steps */
   --t-small: .875rem;
   --t-body: 1.0625rem;
@@ -97,6 +123,10 @@
     --fv-focus: #8FB0FF;
     --fv-mark-line: #F4EFE6;
     --fv-mark-water: #253049;
+    --fv-mark-sky: #3A2730;
+    --fv-mark-sun: #F08A4B;
+    --fv-mark-eye: #1F2B45;
+    --fv-mark-glint: #F08A4B;
     --fv-night-bg: #0B0F18;
     --fv-night-2: #1B2335;
     --fv-night-text: #F4EFE6;
@@ -108,6 +138,9 @@
     --fv-sky-evening: #3A2730;
     --fv-sky-night: #0B0F18;
     --fv-sky-ink: #F4EFE6;
+    --fv-sky-muted: #D9CFC6;
+    --fv-sky-sea: #0B0F18;
+    --fv-sky-ink-on-sun: #3A2730;
   }
 }
 
@@ -124,7 +157,8 @@ body {
   overflow-x: clip;
 }
 h1, h2, h3 { line-height: 1.05; margin: 0 0 .5em; font-weight: 700; letter-spacing: -.025em; text-wrap: balance; }
-h1 { font-size: var(--t-display); letter-spacing: -.035em; }
+h1, h2 { font-family: var(--fv-font-display); font-variation-settings: "SOFT" 100, "WONK" 0; font-weight: 620; letter-spacing: -.015em; }
+h1 { font-size: var(--t-display); letter-spacing: -.02em; }
 h2 { font-size: var(--t-h2); }
 h3 { font-size: var(--t-mid); font-weight: 650; letter-spacing: -.01em; line-height: 1.2; }
 p { margin: 0 0 1em; text-wrap: pretty; }
@@ -171,13 +205,14 @@ a:hover .arrow { transform: translateX(4px); }
 
 /* ------------------------------------------------------------ brand mark */
 .brand { display: inline-flex; align-items: center; gap: .55rem; color: var(--fv-text); }
-.mark-s { width: 2.1rem; height: 2.1rem; }
-.brand-word { font-weight: 600; font-size: 1.35rem; letter-spacing: .04em; line-height: 1; }
-.m-line, .m-ring { fill: none; stroke: var(--fv-mark-line); stroke-linecap: round; }
-.m-sun-s { stroke: var(--fv-accent); stroke-linecap: round; }
-.m-sun { fill: var(--fv-accent); }
-.m-water { fill: var(--fv-mark-water); }
-.m-dot { fill: var(--fv-mark-line); }
+.mark-s { width: 2.4rem; height: 2.4rem; }
+.brand-word { font-family: var(--fv-font-display); font-variation-settings: "SOFT" 100, "WONK" 0; font-weight: 640; font-size: 1.6rem; letter-spacing: -.01em; line-height: 1; }
+.m-sky { fill: var(--fv-mark-sky); }
+.m-sun { fill: var(--fv-mark-sun); }
+.m-sea { fill: var(--fv-mark-water); }
+.m-glint { fill: var(--fv-mark-glint); }
+.m-eye { fill: none; stroke: var(--fv-mark-eye); stroke-linecap: round; }
+.m-eye-dot { fill: var(--fv-mark-eye); }
 
 /* ------------------------------------------------------------ header: wordmark, five links, language */
 .site-head { background: var(--fv-bg); position: relative; z-index: 5; }
@@ -206,12 +241,18 @@ a:hover .arrow { transform: translateX(4px); }
 
 /* ------------------------------------------------------------ hero: two tones, copy left, live clock right */
 .hero { display: grid; min-height: min(56rem, calc(100svh - 4.5rem)); }
-.hero-dark { background: var(--fv-night-bg); color: var(--fv-night-text); display: flex; align-items: flex-end; padding: clamp(40px, 6vw, 72px) var(--gutter) clamp(32px, 5vw, 64px); }
+.hero-dark { background: var(--fv-sky-evening); color: var(--fv-sky-ink); display: flex; flex-direction: column; justify-content: space-between; gap: clamp(24px, 4vw, 48px); padding: clamp(40px, 6vw, 72px) var(--gutter) 0; }
+.hero-art { margin-inline: calc(var(--gutter) * -1); height: clamp(9rem, 22vw, 17rem); }
+.hz { width: 100%; height: 100%; display: block; }
+.hz-sun { fill: var(--fv-accent); }
+.hz-eye { fill: none; stroke: var(--fv-sky-ink-on-sun); stroke-width: 12; stroke-linecap: round; }
+.hz-sea { fill: var(--fv-sky-sea); }
+.hz-glint { fill: var(--fv-accent); }
 .hero-copy { max-width: 40rem; }
-.hero h1 { color: var(--fv-night-text); margin-bottom: 1.25rem; }
-.hero-lede { font-size: var(--t-body); color: var(--fv-night-text); max-width: 44ch; margin-bottom: 1.75rem; }
+.hero h1 { color: var(--fv-sky-ink); margin-bottom: 1.25rem; }
+.hero-lede { font-size: var(--t-body); color: var(--fv-sky-ink); max-width: 44ch; margin-bottom: 1.75rem; }
 .hero-act { margin: 0 0 .75rem; }
-.hero-note { font-size: var(--t-small); color: var(--fv-night-muted); margin: 0; }
+.hero-note { font-size: var(--t-small); color: var(--fv-sky-muted); margin: 0; }
 .hero-light { background: var(--fv-surface); display: grid; place-items: center; padding: clamp(32px, 5vw, 64px) var(--gutter); }
 @media (min-width: 60rem) {
   .hero { grid-template-columns: 1fr 1fr; }
@@ -409,7 +450,7 @@ html:not(.js) .day-step h3 { color: var(--fv-text); }
 /* ------------------------------------------------------------ the end: first step, already open */
 .end { background: var(--fv-accent-strong); color: var(--fv-on-accent); padding-block: clamp(64px, 9vw, 140px); }
 .end-grid { display: grid; gap: 2.5rem; align-items: end; }
-.end h2 { font-size: var(--t-poster); line-height: .92; letter-spacing: -.045em; color: var(--fv-on-accent); margin-bottom: 1.25rem; }
+.end h2 { font-size: var(--t-poster); line-height: .92; letter-spacing: -.03em; color: var(--fv-on-accent); margin-bottom: 1.25rem; }
 .end-text p { max-width: 36ch; font-size: var(--t-body); margin: 0; }
 .dlg { background: var(--fv-card); color: var(--fv-text); border-radius: 22px; padding: 1.5rem; width: 100%; max-width: 28rem; justify-self: end; box-shadow: 0 24px 48px rgba(40, 14, 2, .28); } /* taste-skill-ignore: overlay, form field or inside an app fragment */
 .dlg-title { font-size: var(--t-mid); margin-bottom: 1rem; }
@@ -447,7 +488,7 @@ html:not(.js) .day-step h3 { color: var(--fv-text); }
 @media (prefers-color-scheme: dark) { [data-ui] { --ui-bg: #121826; --ui-card: #1B2335; --ui-line: #34405A; --ui-text: #F4EFE6; --ui-muted: #B3AEA6; } }
 .ui-screen { background: var(--ui-bg); border-radius: 40px; overflow: hidden; aspect-ratio: 9 / 19.5; width: 100%; }
 .ui-in { display: flex; flex-direction: column; gap: 10px; height: 100%; padding: 26px 16px 0; }
-.ui-large { font-size: 1.85rem; font-weight: 750; letter-spacing: -.02em; line-height: 1.05; }
+.ui-large { font-family: var(--fv-font-display); font-variation-settings: "SOFT" 100, "WONK" 0; font-size: 1.95rem; font-weight: 640; letter-spacing: -.015em; line-height: 1.05; }
 .ui-date { color: var(--ui-muted); font-size: .875rem; margin-top: -4px; }
 .ui-card { background: var(--ui-card); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
 .ui-clock { align-items: center; gap: 10px; }
@@ -546,8 +587,8 @@ html:not(.js) .day-step h3 { color: var(--fv-text); }
 .pdf-head b { font-size: 1rem; }
 .pdf-head > span span { color: #4D5668; font-size: .75rem; }
 .pdf-mark { width: 30px; height: 30px; flex: none; }
-.pdf .m-line, .pdf .m-ring { stroke: #1F2B45; }
-.pdf .m-dot, .pdf .m-water { fill: #1F2B45; }
+.pdf .m-sky { fill: #F5D2B8; } .pdf .m-sun { fill: #D9652B; } .pdf .m-sea { fill: #1F2B45; } .pdf .m-glint { fill: #F08A4B; }
+.pdf .m-eye { stroke: #1F2B45; } /* the PDF is always light */
 .pdf-row { display: grid; grid-template-columns: 1.2fr repeat(5, 1fr); padding: 6px 0; border-bottom: 1px solid #DEDED8; font-variant-numeric: tabular-nums; } /* taste-skill-ignore: overlay, form field or inside an app fragment */
 .pdf-row span:not(:first-child) { text-align: right; }
 .pdf-cols { color: #4D5668; font-weight: 650; border-bottom-color: #7A808E; }
@@ -717,13 +758,14 @@ select { max-width: 16rem; }
 .foot-list a { display: inline-flex; align-items: center; min-height: 40px; color: var(--fv-text); text-decoration: none; }
 .foot-list a:hover { color: var(--fv-accent-strong); text-decoration: underline; }
 .ft-addr { font-size: 1.125rem; font-weight: 600; overflow-wrap: anywhere; display: inline-flex; min-height: 44px; align-items: center; }
-.ft-word { background: var(--fv-night-bg); color: var(--fv-night-text); display: grid; place-items: center; min-height: 160px; overflow: hidden; }
+.ft-word { background: var(--fv-night-bg); color: var(--fv-night-text); display: grid; place-items: center; justify-content: center; align-items: center; min-height: 160px; overflow: hidden; }
 .ft-word .brand { color: var(--fv-night-text); gap: 2vw; }
 .ft-word .brand-word { font-size: var(--t-poster); letter-spacing: 0; }
 .ft-word .mark-s { width: var(--t-poster); height: var(--t-poster); }
-.ft-word .m-line, .ft-word .m-ring { stroke: var(--fv-night-text); }
-.ft-word .m-dot { fill: var(--fv-night-text); }
-.ft-word .m-water { fill: var(--fv-night-2); }
+.ft-word .m-sky { fill: var(--fv-night-2); }
+.ft-word .m-sun, .ft-word .m-glint { fill: var(--fv-night-accent); }
+.ft-word .m-sea { fill: #070A10; }
+.ft-word .brand-word { font-weight: 600; letter-spacing: -.02em; }
 .ft-go { background: var(--fv-accent-strong); color: var(--fv-on-accent); text-decoration: none; display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; min-height: 160px; font-size: var(--t-mid); font-weight: 650; line-height: 1.15; letter-spacing: -.01em; transition: background-color 160ms var(--ease); }
 .ft-go:hover { background: var(--fv-accent-hover); color: var(--fv-on-accent); }
 .ft-go svg { align-self: flex-end; width: 48px; height: 48px; fill: none; stroke: currentColor; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; transition: transform 200ms var(--ease); }
@@ -770,6 +812,7 @@ select { max-width: 16rem; }
 .ui-sky-arc { width: 100%; height: auto; margin-top: -4px; }
 .sky-arc { fill: none; stroke: var(--fv-sky-ink); stroke-width: 1.5; stroke-dasharray: 2 5; opacity: .55; }
 .sky-sun { fill: var(--fv-accent-strong); }
+.sky-eye { fill: var(--fv-sky-ink-on-sun); } /* Sünn is awake while you work (docs/brand.md) */
 .sky-horizon { stroke: var(--fv-sky-ink); stroke-width: 2.5; }
 .sky-label { fill: var(--fv-sky-ink); font-size: 11px; font-weight: 600; text-anchor: middle; }
 .ui-sig { display: grid; justify-items: center; text-align: center; margin-top: -6px; }

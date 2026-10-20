@@ -1,13 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
 <title>Fieravend</title>
-<style>
-.l{fill:none;stroke:#1F2B45;stroke-linecap:round}.w{fill:#1F2B45}.s{fill:#D9652B}.d{fill:#1F2B45}.b{fill:#FAF6EF}
-@media (prefers-color-scheme: dark){.l{stroke:#F4EFE6}.w{fill:#253049}.s{fill:#F08A4B}.d{fill:#F4EFE6}.b{fill:#121826}}
-</style>
-<defs><clipPath id="c"><circle cx="512" cy="512" r="400"/></clipPath></defs>
-<rect class="b" width="1024" height="1024" rx="224"/>
-<g clip-path="url(#c)"><circle class="s" cx="716.4" cy="630" r="110"/><rect class="w" x="0" y="630" width="1024" height="394"/></g>
-<circle class="l" cx="512" cy="512" r="400" stroke-width="72"/>
-<line class="l" x1="512" y1="512" x2="613" y2="570" stroke-width="72"/>
-<circle class="d" cx="512" cy="512" r="48"/>
+<style>@media (prefers-color-scheme: dark){.k{fill:#3A2730}.s{fill:#F08A4B}.w{fill:#0B0F18}}</style>
+<defs><clipPath id="t"><rect width="1024" height="1024" rx="228"/></clipPath></defs>
+<g clip-path="url(#t)"><rect class="k" width="1024" height="1024" fill="#F5D2B8"/><circle class="s" cx="512" cy="560" r="250" fill="#D9652B"/><path d="M388 546 q 38 36 76 0" fill="none" stroke="#1F2B45" stroke-width="46" stroke-linecap="round"/><path d="M560 546 q 38 36 76 0" fill="none" stroke="#1F2B45" stroke-width="46" stroke-linecap="round"/><path d="M-10 712 C 130 676, 250 676, 372 708 S 640 748, 780 708 S 940 672, 1034 698 L1034 1034 L-10 1034 Z" class="w" fill="#1F2B45"/></g>
 </svg>

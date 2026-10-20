@@ -64,7 +64,7 @@ export const ORG = {
   address: { '@type': 'PostalAddress', streetAddress: PROVIDER.street, postalCode: '21255', addressLocality: 'Tostedt', addressCountry: 'DE' },
 };
 
-/** Wordmark: the mark plus "fieravend" in Figtree 600, always lower case (wiki "Logo & App-Icon"). */
+/** Wordmark: the mark "Sünn" plus "fieravend" in Fraunces (SOFT 100), always lower case (docs/brand.md). */
 export const wordmark = (id, cls = 'brand') =>
   `<span class="${cls}">${mark({ id, simple: true, cls: 'mark mark-s' })}<span class="brand-word">fieravend</span></span>`;
 
@@ -149,6 +149,7 @@ ${banner}
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/figtree-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css?v=${page.cssVersion}">
 ${scripts}${ld}
 </head>

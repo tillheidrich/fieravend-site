@@ -129,7 +129,7 @@ export function todayScreen(lang) {
   const html = `<div class="ui-screen" data-ui role="img" aria-label="${alt}"><div class="ui-in ui-in-sky" aria-hidden="true">` +
     `<span class="ui-sky sky-evening"><span class="ui-sky-top"><span class="ui-large">${t.today}</span><span class="ui-date">${t.date}</span></span>` +
     `<svg class="ui-sky-arc" viewBox="0 0 320 132" focusable="false"><defs><clipPath id="skyclip-${lang}"><rect x="0" y="0" width="320" height="126"/></clipPath></defs>` +
-    `<path class="sky-arc" d="M40 126 A120 120 0 0 1 280 126"/><g clip-path="url(#skyclip-${lang})"><circle class="sky-sun" cx="${cx}" cy="${cy}" r="15"/></g>` +
+    `<path class="sky-arc" d="M40 126 A120 120 0 0 1 280 126"/><g clip-path="url(#skyclip-${lang})"><circle class="sky-sun" cx="${cx}" cy="${cy}" r="19"/>${[-1, 1].map((d) => `<circle class="sky-eye" cx="${(+cx + d * 6.5).toFixed(1)}" cy="${(+cy - 2.5).toFixed(1)}" r="2.6"/>`).join('')}</g>` +
     `<line class="sky-horizon" x1="0" y1="126" x2="320" y2="126"/><text class="sky-label" x="40" y="122">7:58</text><text class="sky-label sky-label-end" x="280" y="122">16:16</text></svg>` +
     `<span class="ui-sig"><span class="ui-sig-l">${de ? 'Feierabend um' : 'You finish at'}</span><b class="ui-sig-n num">16:16</b><span class="ui-sig-s num">${de ? 'noch 1:06 · 6:42 heute' : '1:06 to go · 6:42 today'}</span></span></span>` +
     `<span class="ui-pad"><span class="ui-stamp">${t.out}</span>` +

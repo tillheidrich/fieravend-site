@@ -1,29 +1,42 @@
 /**
- * The mark (dial with horizon, from the wiki page "Logo & App-Icon", draft 18.10.2026). App screens: screens.mjs.
- * Colours come from CSS classes (site.css), so light and dark mode work without separate files.
+ * The mark "Sünn" (brand 2, 20.10.2026, docs/brand.md): a content sun with closed eyes, half set into a soft
+ * North Sea wave, with its reflection. Colours come from CSS classes (site.css), so light and dark mode work.
+ * App screens: screens.mjs.
  */
 
+/** Eyes of Sünn on a 1024 grid around the sun centre. ruhig = closed and content (default), wach = open, stolz = closed, smiling. */
+const EYES = {
+  ruhig: (x, y, w) => `<path class="m-eye" d="M${x - 38} ${y - 14} q 38 36 76 0" stroke-width="${w}"/>`,
+  stolz: (x, y, w) => `<path class="m-eye" d="M${x - 38} ${y + 8} q 38 -38 76 0" stroke-width="${w}"/>`,
+  wach: (x, y) => `<circle class="m-eye-dot" cx="${x}" cy="${y - 4}" r="27"/>`,
+};
+
 /**
- * The mark. Geometry on a 1024 grid, exactly as in the draft SVG.
- * simple = favicon version (no hour ticks, no reflection), used below 40 px.
+ * The mark as a rounded tile (sky, sun, sea). simple = small version (thicker eyes, no reflection), used below 40 px.
+ * tile = false draws only Sünn and the sea (for illustrations on a coloured ground).
  */
-export function mark({ id = 'm', simple = false, cls = 'mark', label = '' } = {}) {
+export function mark({ id = 'm', simple = false, cls = 'mark', label = '', mood = 'ruhig', tile = true } = {}) {
   const a11y = label ? `role="img" aria-label="${label}"` : 'aria-hidden="true" focusable="false"';
-  const reflection = simple ? '' :
-    '<line class="m-sun-s" x1="641.4" y1="674" x2="791.4" y2="674" stroke-width="18"/>' +
-    '<line class="m-sun-s" x1="668.4" y1="716" x2="764.4" y2="716" stroke-width="18"/>' +
-    '<line class="m-sun-s" x1="694.4" y1="758" x2="738.4" y2="758" stroke-width="18"/>';
-  const ticks = simple ? '' :
-    '<line class="m-line" x1="512" y1="186" x2="512" y2="230" stroke-width="28"/>' +
-    '<line class="m-line" x1="838" y1="512" x2="794" y2="512" stroke-width="28"/>' +
-    '<line class="m-line" x1="186" y1="512" x2="230" y2="512" stroke-width="28"/>';
-  const w = simple ? 56 : 40;
-  return `<svg class="${cls}" viewBox="116 116 792 792" ${a11y}>` +
-    `<defs><clipPath id="${id}-dial"><circle cx="512" cy="512" r="360"/></clipPath></defs>` +
-    `<g clip-path="url(#${id}-dial)"><circle class="m-sun" cx="716.4" cy="630" r="96"/>` +
-    `<rect class="m-water" x="0" y="630" width="1024" height="394"/>${reflection}</g>` +
-    `<line class="m-line" x1="164" y1="630" x2="860" y2="630" stroke-width="20" clip-path="url(#${id}-dial)"/>` +
-    `<circle class="m-ring" cx="512" cy="512" r="360" stroke-width="${w}"/>${ticks}` +
-    `<line class="m-line" x1="512" y1="512" x2="603.8" y2="565" stroke-width="${w}"/>` +
-    `<circle class="m-dot" cx="512" cy="512" r="34"/></svg>`;
+  const cx = 512, cy = 560, w = simple ? 46 : 32;
+  const eyes = [-1, 1].map((d) => EYES[mood](cx + d * 86, cy, w)).join('');
+  const glint = simple ? '' : '<rect class="m-glint" x="402" y="792" width="220" height="20" rx="10"/><rect class="m-glint" x="452" y="850" width="120" height="20" rx="10"/>';
+  const sky = tile ? '<rect class="m-sky" width="1024" height="1024"/>' : '';
+  return `<svg class="${cls}" viewBox="0 0 1024 1024" ${a11y}>` +
+    `<defs><clipPath id="${id}-t"><rect width="1024" height="1024" rx="${tile ? 228 : 0}"/></clipPath></defs>` +
+    `<g clip-path="url(#${id}-t)">${sky}<circle class="m-sun" cx="${cx}" cy="${cy}" r="250"/>${eyes}` +
+    '<path class="m-sea" d="M-10 712 C 130 676, 250 676, 372 708 S 640 748, 780 708 S 940 672, 1034 698 L1034 1034 L-10 1034 Z"/>' +
+    `${glint}</g></svg>`;
+}
+
+/**
+ * Wide evening scene for the start page: Sünn, eyes closed, half set into the sea, with its reflection.
+ * Decorative (aria-hidden); colours from CSS (.hz-*).
+ */
+export function horizon({ cls = 'hz', cx = 600, h = 520 } = {}) {
+  const dy = h - 520, cy = 330 + dy, r = 190;
+  const eyes = [-1, 1].map((d) => { const x = cx + d * 66; return `<path class="hz-eye" d="M${x - 30} ${cy - 10} q 30 28 60 0"/>`; }).join('');
+  const wave = `M-20 ${410 + dy} C 160 ${372 + dy}, 320 ${372 + dy}, 470 ${404 + dy} S 800 ${446 + dy}, 980 ${404 + dy} S 1140 ${370 + dy}, 1220 ${392 + dy} L1220 ${h + 20} L-20 ${h + 20} Z`;
+  return `<svg class="${cls}" viewBox="0 0 1200 ${h}" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">` +
+    `<circle class="hz-sun" cx="${cx}" cy="${cy}" r="${r}"/>${eyes}<path class="hz-sea" d="${wave}"/>` +
+    `<rect class="hz-glint" x="${cx - 90}" y="${452 + dy}" width="180" height="14" rx="7"/><rect class="hz-glint" x="${cx - 50}" y="${488 + dy}" width="100" height="14" rx="7"/></svg>`;
 }

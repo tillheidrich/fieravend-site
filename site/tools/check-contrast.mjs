@@ -34,6 +34,7 @@ const PAIRS = [
   ['on-accent', 'secondary', 3, 'job bar label (bold)'],
   ['sky-ink', 'sky-morning', 4.5, 'text on morning sky'], ['sky-ink', 'sky-day', 4.5, 'text on day sky'], ['sky-ink', 'sky-evening', 4.5, 'text on evening sky'],
   ['accent-strong', 'sky-evening', 3, 'sun on evening sky'], ['accent-strong', 'sky-day', 3, 'sun on day sky'],
+  ['sky-muted', 'sky-evening', 4.5, 'hero note on evening sky'], ['accent-strong', 'sky-evening', 3, 'hero button on evening sky'], ['sky-ink-on-sun', 'accent', 3, 'eyes of Sünn on the sun'], ['mark-eye', 'mark-sun', 3, 'eyes of the mark'], ['mark-sun', 'mark-sky', 2, 'sun on mark sky (decorative, own floor)'],
 ];
 
 function tokens(block) {

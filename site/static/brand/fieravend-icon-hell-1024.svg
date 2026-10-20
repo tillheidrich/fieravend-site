@@ -1,15 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-<title>Fieravend – Bildzeichen (hell)</title>
-<defs><clipPath id="dial"><circle cx="512" cy="512" r="360"/></clipPath></defs>
-<rect width="1024" height="1024" fill="#FAF6EF"/>
-<g clip-path="url(#dial)">
-  <circle cx="716.4" cy="630.0" r="96" fill="#D9652B"/>
-  <rect x="0" y="630" width="1024" height="394" fill="#1F2B45"/>
-  <line x1="641.4" y1="674" x2="791.4" y2="674" stroke="#D9652B" stroke-width="18" stroke-linecap="round"/><line x1="668.4" y1="716" x2="764.4" y2="716" stroke="#D9652B" stroke-width="18" stroke-linecap="round"/><line x1="694.4" y1="758" x2="738.4" y2="758" stroke="#D9652B" stroke-width="18" stroke-linecap="round"/>
-</g>
-<line x1="164" y1="630" x2="860" y2="630" stroke="#1F2B45" stroke-width="20" stroke-linecap="round" clip-path="url(#dial)"/>
-<circle cx="512" cy="512" r="360" fill="none" stroke="#1F2B45" stroke-width="40"/>
-<line x1="512.0" y1="186.0" x2="512.0" y2="230.0" stroke="#1F2B45" stroke-width="28" stroke-linecap="round"/><line x1="838.0" y1="512.0" x2="794.0" y2="512.0" stroke="#1F2B45" stroke-width="28" stroke-linecap="round"/><line x1="186.0" y1="512.0" x2="230.0" y2="512.0" stroke="#1F2B45" stroke-width="28" stroke-linecap="round"/>
-<line x1="512" y1="512" x2="603.8" y2="565.0" stroke="#1F2B45" stroke-width="40" stroke-linecap="round"/>
-<circle cx="512" cy="512" r="34" fill="#1F2B45"/>
+<title>Fieravend</title>
+<defs><clipPath id="t"><rect width="1024" height="1024" rx="228"/></clipPath></defs>
+<g clip-path="url(#t)"><rect width="1024" height="1024" fill="#F5D2B8"/><circle cx="512" cy="560" r="250" fill="#D9652B"/><path d="M388 546 q 38 36 76 0" fill="none" stroke="#1F2B45" stroke-width="32" stroke-linecap="round"/><path d="M560 546 q 38 36 76 0" fill="none" stroke="#1F2B45" stroke-width="32" stroke-linecap="round"/><path d="M-10 712 C 130 676, 250 676, 372 708 S 640 748, 780 708 S 940 672, 1034 698 L1034 1034 L-10 1034 Z" fill="#1F2B45"/><rect x="402" y="792" width="220" height="20" rx="10" fill="#F08A4B"/><rect x="452" y="850" width="120" height="20" rx="10" fill="#F08A4B"/></g>
 </svg>

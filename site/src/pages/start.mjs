@@ -6,6 +6,7 @@
  * Example people and places are fictional (Mira Berg, Praxis am Markt, Café Mika, Hotel am See).
  * No <form> elements: the CSP has form-action 'none', the mail links are plain mailto links that start.js fills in.
  */
+import { horizon } from '../art.mjs';
 import { href, ORG } from '../layout.mjs';
 import { MAIL, SITE, ROUTES, APP_STORE_URL } from '../config.mjs';
 import { feierabendClock } from '../feierabend.mjs';
@@ -199,6 +200,7 @@ export default function start(lang) {
       <p class="hero-act"><a class="btn btn-primary" href="${mailto(c)}">${APP_STORE_URL ? (lang === 'de' ? 'Im App Store laden' : 'Download on the App Store') : c.cta}</a></p>
       <p class="hero-note">${c.ctaNote}</p>
     </div>
+    <div class="hero-art">${horizon()}</div>
   </div>
   <div class="hero-light"><div class="hero-tool">${feierabendClock(lang)}<p class="hero-tool-more"><a href="${href('feierabend', lang)}">${lang === 'de' ? 'Für Österreich, die Schweiz und mehr Stunden: Feierabend-Rechner' : 'For Austria, Switzerland and other hours: finish-time calculator'}</a></p></div></div>
 </section>
