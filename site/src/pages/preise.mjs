@@ -12,7 +12,7 @@ const no = (l) => `<span class="no"><span aria-hidden="true">−</span><span cla
 
 const C = {
   de: {
-    title: 'Preise · Fieravend',
+    title: 'Preise: Zeiterfassungs-App ohne Abo',
     desc: 'Kein Abo. 30 Tage alles testen, dann einmal kaufen: Fieravend Plus für 49,99 € (zum Start 34,99 €) oder der Jahrespass für 14,99 €. Preise geplant.',
     label: 'Preise, geplant',
     h1: 'Kein Abo. Einmal kaufen, fertig.',
@@ -34,7 +34,7 @@ const C = {
       ['Nachweis mit Änderungsprotokoll', 0, 1, 1],
       ['Hinweise über mehrere Jobs', 0, 1, 1],
       ['Steuer-Auswertung für die Anlage N', 0, 1, 1],
-      ['Apple Watch, Ortserinnerung', 0, 1, 1],
+      ['Apple Watch und Ortserinnerung (kommen später)', 0, 1, 1],
       ['Gesetzes- und Steuer-Updates', 0, 'für das Jahr', 'für immer'],
       ['Gilt', '−', 'ein Kalenderjahr', 'für immer'],
     ],
@@ -52,7 +52,7 @@ const C = {
     vat: 'Preise in Euro für den App Store in Deutschland, inklusive Umsatzsteuer. Kauf und Abrechnung laufen über Apple.',
   },
   en: {
-    title: 'Pricing · Fieravend',
+    title: 'Pricing: a time tracking app without subscription',
     desc: 'No subscription. Try everything for 30 days, then buy once: Fieravend Plus for €49.99 (€34.99 at launch) or the Year Pass for €14.99. Prices planned.',
     label: 'Pricing, planned',
     h1: 'No subscription. Buy once, done.',
@@ -74,7 +74,7 @@ const C = {
       ['Record with change log', 0, 1, 1],
       ['Hints across several jobs', 0, 1, 1],
       ['Tax summary (German Anlage N)', 0, 1, 1],
-      ['Apple Watch, location reminder', 0, 1, 1],
+      ['Apple Watch and location reminder (coming later)', 0, 1, 1],
       ['Law and tax updates', 0, 'for the year', 'for good'],
       ['Valid', '−', 'one calendar year', 'for good'],
     ],
@@ -102,7 +102,7 @@ export default function preise(lang) {
 <section class="page-head">
   <div class="wrap head-grid">
     <div>
-      <p class="eyebrow">${c.label}</p>
+      
       <h1>${c.h1}</h1>
       <p class="lede">${c.lede}</p>
       <p class="planned">${c.planned} ${stand(lang)}.</p>
@@ -146,7 +146,7 @@ export default function preise(lang) {
 </section>
 
 <section class="band">
-  <div class="wrap narrow">${waitlist(lang)}</div>
+  <div class="wrap narrow">${waitlist(lang, { source: 'preise' })}</div>
 </section>`;
   return { title: c.title, desc: c.desc, body };
 }

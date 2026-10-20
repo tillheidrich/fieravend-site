@@ -7,7 +7,7 @@ import { href } from '../layout.mjs';
 
 const C = {
   de: {
-    title: 'Häufige Fragen · Fieravend',
+    title: 'Fragen zur Arbeitszeiterfassung mit Fieravend',
     desc: 'Ist das erlaubt, sieht mein Chef meine Einträge, brauche ich ein Konto, was kostet Fieravend? Antworten auf die häufigsten Fragen.',
     label: 'Häufige Fragen',
     h1: 'Was Leute vorher wissen wollen.',
@@ -74,7 +74,7 @@ export default function fragen(lang) {
 <section class="page-head">
   <div class="wrap head-grid">
     <div>
-      <p class="eyebrow">${c.label}</p>
+      
       <h1>${c.h1}</h1>
       <p class="lede">${c.lede(MAIL)}</p>
     </div>

@@ -39,6 +39,15 @@ export const ROUTES = {
   preise:       { de: '/preise/',                en: '/en/pricing/' },
   fragen:       { de: '/fragen/',                en: '/en/faq/' },
   rechner:      { de: '/rechner/ueberstunden/',  en: '/en/calculator/overtime/' },
+  feierabend:   { de: '/rechner/feierabend/',    en: '/en/calculator/finish-time/' },
+  nachweis:     { de: '/ratgeber/ueberstunden-nachweisen/', en: '/en/guide/prove-overtime/' },
   datenschutz:  { de: '/datenschutz/',           en: '/en/privacy/' },
   impressum:    { de: '/impressum/',             en: '/en/legal-notice/' },
 };
+
+/**
+ * App Store id (the number in apps.apple.com/…/id<number>). Empty until Fieravend is live.
+ * Once set, every waiting-list button becomes "Im App Store laden" and Safari shows the Smart App Banner.
+ */
+export const APP_STORE_ID = '';
+export const APP_STORE_URL = APP_STORE_ID ? `https://apps.apple.com/de/app/fieravend/id${APP_STORE_ID}` : '';

@@ -2,12 +2,12 @@
  * Main page for the core audience (decision 18.10.2026): employees whose employer has no time tracking.
  * Legal state with court file numbers; [offen] whether the German law with details has been passed, check regularly.
  */
-import { sheet, hintCard } from '../art.mjs';
+import { proofSheet, hintFragment } from '../screens.mjs';
 import { waitlist, stand, href } from '../layout.mjs';
 
 const C = {
   de: {
-    title: 'Wenn dein Betrieb kein System hat · Fieravend',
+    title: 'Arbeitszeit selbst erfassen, wenn der Betrieb es nicht tut',
     desc: 'Keine Stechuhr, keine Software, nur ein Zettel oder gar nichts? Mit Fieravend führst du deinen eigenen Stundenzettel auf dem iPhone und hast am Monatsende einen sauberen Nachweis.',
     label: 'Wenn dein Betrieb kein System hat',
     h1: 'Dein Chef schreibt nichts auf? Dann schreib du.',
@@ -39,7 +39,7 @@ const C = {
     calc: 'Kurz nachrechnen, wie viele Überstunden diese Woche zusammenkommen',
   },
   en: {
-    title: 'When your workplace has no system · Fieravend',
+    title: 'Record your own working hours when your employer does not',
     desc: 'No time clock, no software, just a note or nothing at all? With Fieravend you keep your own time sheet on the iPhone and have a clean record at the end of the month.',
     label: 'When your workplace has no system',
     h1: 'Your boss does not write it down? Then you do.',
@@ -81,11 +81,11 @@ export default function kleinbetrieb(lang) {
 <section class="page-head">
   <div class="wrap head-grid">
     <div>
-      <p class="eyebrow">${c.label}</p>
+      
       <h1>${c.h1}</h1>
       <p class="lede">${c.lede}</p>
     </div>
-    <div class="head-art">${hintCard(lang)}</div>
+    <div class="head-art">${hintFragment(lang)}</div>
   </div>
 </section>
 
@@ -103,7 +103,7 @@ export default function kleinbetrieb(lang) {
       <p>${c.proofP}</p>
       <p class="small muted">${c.proofNote}</p>
     </div>
-    <div class="zig-art">${sheet(lang)}</div>
+    <div class="zig-art">${proofSheet(lang, { crop: true })}</div>
   </div>
 </section>
 
@@ -120,7 +120,7 @@ export default function kleinbetrieb(lang) {
 </section>
 
 <section class="band">
-  <div class="wrap narrow">${waitlist(lang)}</div>
+  <div class="wrap narrow">${waitlist(lang, { source: 'kleinbetrieb' })}</div>
 </section>`;
   return { title: c.title, desc: c.desc, body };
 }

@@ -13,7 +13,7 @@ const addr = (lang) => `${P.name}<br>${P.street}<br>${P.city}<br>${P.country[lan
 export function impressum(lang) {
   const de = lang === 'de';
   const body = de ? `
-<section class="page-head page-head-tight"><div class="wrap"><p class="eyebrow">Rechtliches</p><h1>Impressum</h1><p class="small muted">${stand(lang)}</p></div></section>
+<section class="page-head page-head-tight"><div class="wrap"><h1>Impressum</h1><p class="small muted">${stand(lang)}</p></div></section>
 <section class="band band-tight"><div class="wrap prose">
 <h2>Angaben nach § 5 DDG</h2>
 <p>Fieravend ist ein Angebot von<br>${addr(lang)}</p>
@@ -29,7 +29,7 @@ export function impressum(lang) {
 <h2>Hinweis</h2>
 <p>Fieravend gibt Hinweise zur Arbeitszeit und ersetzt keine Rechts- oder Steuerberatung. Gesetzesangaben auf dieser Website haben ein Datum und eine Quelle. Sie können sich ändern.</p>
 </div></section>` : `
-<section class="page-head page-head-tight"><div class="wrap"><p class="eyebrow">Legal</p><h1>Legal notice</h1><p class="small muted">${stand(lang)}</p></div></section>
+<section class="page-head page-head-tight"><div class="wrap"><h1>Legal notice</h1><p class="small muted">${stand(lang)}</p></div></section>
 <section class="band band-tight"><div class="wrap prose">
 <p class="small muted">The German version (<a href="${href('impressum', 'de')}" hreflang="de" lang="de">Impressum</a>) is the binding one.</p>
 <h2>Information under § 5 DDG (Germany)</h2>
@@ -56,7 +56,7 @@ export function impressum(lang) {
 export function datenschutz(lang) {
   const de = lang === 'de';
   const body = de ? `
-<section class="page-head page-head-tight"><div class="wrap head-grid"><div><p class="eyebrow">Rechtliches</p><h1>Datenschutz</h1><p class="lede">Diese Website setzt keine Cookies, misst nichts und lädt nichts von fremden Servern. Die Schrift liegt auf demselben Server wie die Seite.</p><p class="small muted">${stand(lang)}</p></div></div></section>
+<section class="page-head page-head-tight"><div class="wrap head-grid"><div><h1>Datenschutz</h1><p class="lede">Diese Website setzt keine Cookies, misst nichts und lädt nichts von fremden Servern. Die Schrift liegt auf demselben Server wie die Seite.</p><p class="small muted">${stand(lang)}</p></div></div></section>
 <section class="band band-tight"><div class="wrap prose">
 <h2>Wer verantwortlich ist</h2>
 <p>${addr(lang)}<br>E-Mail: <a href="mailto:${P.mail}">${P.mail}</a></p>
@@ -83,7 +83,7 @@ export function datenschutz(lang) {
 <p>Du hast das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21). Schreib dafür an <a href="mailto:${P.mail}">${P.mail}</a>.</p>
 <p>Du kannst dich auch bei einer Aufsichtsbehörde beschweren. Für uns zuständig ist <a href="https://www.lfd.niedersachsen.de">die Landesbeauftragte für den Datenschutz Niedersachsen</a>, Prinzenstraße 5, 30159 Hannover.</p>
 </div></section>` : `
-<section class="page-head page-head-tight"><div class="wrap head-grid"><div><p class="eyebrow">Legal</p><h1>Privacy</h1><p class="lede">This website sets no cookies, measures nothing and loads nothing from other servers. The font lives on the same server as the page.</p><p class="small muted">${stand(lang)}</p></div></div></section>
+<section class="page-head page-head-tight"><div class="wrap head-grid"><div><h1>Privacy</h1><p class="lede">This website sets no cookies, measures nothing and loads nothing from other servers. The font lives on the same server as the page.</p><p class="small muted">${stand(lang)}</p></div></div></section>
 <section class="band band-tight"><div class="wrap prose">
 <p class="small muted">The German version (<a href="${href('datenschutz', 'de')}" hreflang="de" lang="de">Datenschutz</a>) is the binding one.</p>
 <h2>Who is responsible</h2>
@@ -125,7 +125,7 @@ export function notFound() {
     desc: 'Diese Seite gibt es nicht.',
     body: `
 <section class="page-head"><div class="wrap head-grid"><div>
-<p class="eyebrow">404</p><h1>Diese Seite gibt es nicht.</h1>
+<h1>Diese Seite gibt es nicht.</h1>
 <p class="lede">Vielleicht hat sich die Adresse geändert. <a href="${href('start', 'de')}">Zur Startseite</a></p>
 <p class="lede" lang="en">This page does not exist. <a href="${href('start', 'en')}">Go to the English home page</a></p>
 </div></div></section>`,

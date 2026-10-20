@@ -27,6 +27,11 @@ const PAIRS = [
   ['night-link', 'night-bg', 4.5, 'night band links'], ['night-accent', 'night-bg', 4.5, 'night band label (small caps)'],
   ['on-accent', 'accent-hover', 4.5, 'primary button, hover'], ['surface', 'secondary', 4.5, 'text on the blue job bar'],
   ['warn', 'surface-2', 4.5, 'hint text on sand'], ['bg', 'text', 4.5, 'clock-out button (inverted)'],
+  ['text', 'card', 4.5, 'text in app fragments'], ['text-muted', 'card', 4.5, 'small print in app fragments'], ['accent-strong', 'card', 4.5, 'links in app fragments'],
+  ['plus', 'card', 4.5, 'plus in app fragments'], ['minus', 'card', 4.5, 'minus in app fragments'], ['warn', 'card', 4.5, 'hint in app fragments'],
+  ['text', 'accent-soft', 4.5, 'recommended plan'], ['text-muted', 'accent-soft', 4.5, 'small print on the recommended plan'],
+  ['night-text', 'night-2', 4.5, 'text on night panels'], ['night-muted', 'night-bg', 4.5, 'hero note'],
+  ['on-accent', 'secondary', 3, 'job bar label (bold)'],
 ];
 
 function tokens(block) {

@@ -4,14 +4,15 @@
  * Wiki "Website fieravend.de", Rechner: Ist − Soll per week; example 5 × 8:30 at 40 h = +2:30.
  * Break rules per country: DE § 4 ArbZG, AT § 11 AZG, CH Art. 15 ArG, EU Art. 4 RL 2003/88/EG.
  */
-import { waitlist, stand, href } from '../layout.mjs';
+import { waitlist, stand, href, ORG } from '../layout.mjs';
+import { SITE, ROUTES } from '../config.mjs';
 
 const DAYS = { de: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'], en: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] };
 const SHORT = { de: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'], en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] };
 
 const C = {
   de: {
-    title: 'Überstunden berechnen · Rechner · Fieravend',
+    title: 'Überstundenrechner: Überstunden pro Woche berechnen',
     desc: 'Überstunden für eine Woche berechnen: Beginn, Ende und Pause je Tag eintragen, Soll pro Woche angeben, fertig. Mit Rechenweg und Pausen-Hinweis. Läuft im Browser und speichert nichts.',
     label: 'Rechner',
     h1: 'Überstunden berechnen',
@@ -47,7 +48,7 @@ const C = {
     appLink: 'Wie Fieravend das macht',
   },
   en: {
-    title: 'Calculate overtime · Calculator · Fieravend',
+    title: 'Overtime calculator: work out a week of overtime',
     desc: 'Calculate overtime for one week: enter start, end and break for each day, add your contract hours per week, done. With the working and a break hint. Runs in your browser and stores nothing.',
     label: 'Calculator',
     h1: 'Calculate your overtime',
@@ -101,7 +102,7 @@ export default function rechner(lang) {
 <section class="page-head page-head-tight">
   <div class="wrap head-grid">
     <div>
-      <p class="eyebrow">${c.label}</p>
+      
       <h1>${c.h1}</h1>
       <p class="lede">${c.lede}</p>
     </div>
@@ -131,7 +132,7 @@ export default function rechner(lang) {
       <p class="calc-actions"><button class="btn btn-primary" type="submit">${c.calc}</button> <button class="btn btn-quiet" type="button" data-clear hidden>${c.reset}</button></p>
     </form>
     <div class="calc-out" id="out" aria-live="polite">
-      <h2 class="label">${c.result}</h2>
+      <h2 class="calc-h2">${c.result}</h2>
       <noscript><p>${c.noscript}</p></noscript>
       <div id="out-body"></div>
     </div>
@@ -154,7 +155,8 @@ export default function rechner(lang) {
 </section>
 
 <section class="band">
-  <div class="wrap narrow"><p class="lede">${c.app} <a href="${href('start', lang)}">${c.appLink}</a></p>${waitlist(lang)}</div>
+  <div class="wrap narrow"><p class="lede">${c.app} <a href="${href('start', lang)}">${c.appLink}</a></p>${waitlist(lang, { source: 'rechner' })}</div>
 </section>`;
-  return { title: c.title, desc: c.desc, body, scripts: ['/assets/rechner.js'] };
+  const jsonld = [{ '@type': 'WebApplication', name: c.h1, url: SITE + ROUTES.rechner[lang], applicationCategory: 'UtilitiesApplication', operatingSystem: 'Web', inLanguage: lang, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' }, publisher: { '@id': ORG['@id'] }, description: c.desc }, ORG];
+  return { title: c.title, desc: c.desc, body, scripts: ['/assets/rechner.js'], jsonld };
 }

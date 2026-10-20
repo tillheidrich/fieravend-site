@@ -15,7 +15,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { SITE, ROUTES, STAND } from './src/config.mjs';
+import { SITE, ROUTES, STAND, MAIL } from './src/config.mjs';
 import { shell } from './src/layout.mjs';
 import { checkContrast } from './tools/check-contrast.mjs';
 import start from './src/pages/start.mjs';
@@ -25,12 +25,14 @@ import mytime from './src/pages/mytime.mjs';
 import preise from './src/pages/preise.mjs';
 import fragen from './src/pages/fragen.mjs';
 import rechner from './src/pages/rechner.mjs';
+import feierabend from './src/pages/feierabend.mjs';
+import nachweis from './src/pages/nachweis.mjs';
 import { impressum, datenschutz, notFound } from './src/pages/legal.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(HERE, 'dist');
 const STATIC = path.join(HERE, 'static');
-const PAGES = { start, kleinbetrieb, zweijobs, mytime, preise, fragen, rechner, impressum, datenschutz };
+const PAGES = { start, kleinbetrieb, zweijobs, mytime, preise, fragen, rechner, feierabend, nachweis, impressum, datenschutz };
 /** Files from site/static that belong at the site root instead of /assets. */
 const ROOT_FILES = ['favicon.svg', 'favicon-32.png', 'apple-touch-icon.png'];
 
@@ -60,6 +62,7 @@ const cssVersion = crypto.createHash('sha256').update(fs.readFileSync(path.join(
 
 // ------------------------------------------------------------------ pages
 const written = [];
+const META = [];
 const write = (urlPath, html) => {
   const file = urlPath.endsWith('/') ? path.join(DIST, urlPath, 'index.html') : path.join(DIST, urlPath);
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -74,6 +77,7 @@ for (const [key, fn] of Object.entries(PAGES)) {
     if (!p.title || !p.desc || !p.body) throw new Error(`page ${key}/${lang} is missing title, desc or body`);
     if (p.desc.length > 200) console.warn(`warn: description of ${key}/${lang} is ${p.desc.length} characters`);
     write(ROUTES[key][lang], shell({ ...p, key, lang, cssVersion }));
+    META.push({ key, lang, title: p.title, desc: p.desc });
   }
 }
 const nf = notFound();
@@ -86,14 +90,34 @@ const urls = Object.keys(PAGES).flatMap((key) => ['de', 'en'].map((lang) => {
 }));
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`);
+// AI search and answer engines are welcome: the site has nothing to hide and every claim carries a source.
 fs.writeFileSync(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
+const pageList = (lang) => META.filter((m) => m.lang === lang && !['impressum', 'datenschutz'].includes(m.key))
+  .map((m) => `- [${m.title}](${SITE}${ROUTES[m.key][lang]}): ${m.desc}`);
 fs.writeFileSync(path.join(DIST, 'llms.txt'), [
   '# Fieravend',
   '',
-  '> Fieravend ist eine iPhone-App für Angestellte, deren Betrieb keine eigene Zeiterfassung hat: eigener Stundenzettel, Überstunden, Urlaub, Feiertage, Hinweise nach dem Arbeitszeitgesetz (Deutschland, Österreich, Schweiz; andere EU-Länder mit den EU-Grundregeln). Kein Konto, kein Server, kein Tracking, kein Abo: 30 Tage testen, dann einmal kaufen (Plus 49,99 €, Jahrespass 14,99 €, geplant). Noch nicht im App Store (Stand ' + STAND.de + '). Ein Werkzeug von Heidrich Digital.',
+  '> Fieravend ist eine iPhone-App zur persönlichen Arbeitszeiterfassung für Angestellte, deren Betrieb keine eigene Zeiterfassung hat. Sie führt einen eigenen Stundenzettel mit Stempeluhr, rechnet Überstunden, Urlaub und Feiertage und gibt ruhige Hinweise nach dem Arbeitszeitrecht von Deutschland, Österreich und der Schweiz (andere EU-Länder: Richtlinie 2003/88/EG). Kein Konto, kein Server, kein Tracking, kein Abo. Noch nicht im App Store (Stand ' + STAND.de + '). Ein Werkzeug von Heidrich Digital (Till Heidrich, Tostedt).',
   '',
-  '## Seiten',
-  ...Object.keys(PAGES).map((k) => `- [${k}](${SITE}${ROUTES[k].de}) · [en](${SITE}${ROUTES[k].en})`),
+  '## Fakten',
+  '- Plattform: iPhone und iPad, iOS 18 oder neuer. Sprachen: Deutsch, Englisch. Android: noch nicht, zuerst kommt das iPhone.',
+  '- Preise (geplant): 30 Tage alles testen ohne Zahlungsdaten; danach Basis ohne Kauf (Stempeln, letzte 7 Tage, ein Job, JSON-Backup); Plus 49,99 € einmalig (zum Start 34,99 € bis 31.1.2027); Jahrespass 14,99 € für ein Kalenderjahr, verlängert sich nicht. Kein Abo.',
+  '- Daten: nur auf dem Gerät und in der eigenen iCloud der Person. Keine Analyse-SDKs. Optional App-Sperre mit Face ID.',
+  '- Recht: Feiertage aller 16 deutschen Bundesländer, 9 österreichischen Bundesländer und 26 Kantone; Pausen, Ruhezeit und Höchstarbeitszeit nach ArbZG, JArbSchG, AZG, ArG; Urlaub nach BUrlG und den Regeln in AT und CH.',
+  '- Mehrere Jobs: jeder Job mit eigenem Konto; für Pausen und Ruhezeit zählt Fieravend alle Jobs zusammen (§ 2 Abs. 1 ArbZG).',
+  '- Nachweis: Stundenzettel als PDF und CSV, nachgetragene Zeiten markiert, Änderungsprotokoll, SHA-256-Prüfsumme.',
+  '- Umzug: Import aus myTime und anderen Apps per CSV, Startsaldo für Überstunden und Resturlaub.',
+  '- Rechtslage Überstunden (Deutschland): Wer Überstunden einklagt, muss sie darlegen und beweisen (BAG, 04.05.2022, 5 AZR 359/21), trotz der Erfassungspflicht nach EuGH C-55/18 und BAG 1 ABR 22/21.',
+  '- Fieravend gibt Hinweise und ist keine Rechts- oder Steuerberatung.',
+  '',
+  '## Seiten (Deutsch)',
+  ...pageList('de'),
+  '',
+  '## Pages (English)',
+  ...pageList('en'),
+  '',
+  '## Kontakt',
+  `- ${MAIL}`,
   '',
 ].join('\n'));
 

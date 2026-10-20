@@ -6,7 +6,7 @@ import { waitlist, href } from '../layout.mjs';
 
 const C = {
   de: {
-    title: 'Umzug von myTime · Fieravend',
+    title: 'myTime-Alternative ohne Abo: Umzug mit CSV',
     desc: 'Du nutzt myTime und willst wechseln? Nimm deine Einträge als CSV mit und trag deinen aktuellen Überstunden- und Urlaubsstand als Startwert ein.',
     label: 'Umzug von myTime',
     h1: 'Bring deine myTime-Daten mit.',
@@ -21,14 +21,14 @@ const C = {
     fallbackH: 'Wenn nicht alles passt',
     fallbackP: 'Dann trägst du einfach deinen aktuellen Überstunden- und Urlaubsstand als Startwert ein. Ab heute rechnet Fieravend weiter, und deine alten Zahlen bleiben in deiner alten App oder in der CSV-Datei.',
     aboH: 'Und dein Abo?',
-    aboP: 'Kündige es in den Einstellungen deines Apple-Accounts, wenn du sicher bist, dass alles da ist. Fieravend hat kein Abo. Du testest 30 Tage lang alles und kaufst danach einmal, wenn es dir passt.',
+    aboP: 'Kündige es in den Einstellungen deines Apple-Accounts, wenn du sicher bist, dass alles da ist. Fieravend hat kein Abo. Du testest 30 Tage lang alles und kaufst danach einmal, wenn es dir passt. Stempeln und Backup kosten bei Fieravend nie extra, auch ohne Kauf.',
     later: 'Den Import aus dem myTime-Backup bauen wir gerade. Bis er fertig ist, versprechen wir nur die CSV-Datei.',
     other: 'Du kommst aus Excel oder einer anderen App? Eine CSV-Datei mit Datum, Beginn, Ende und Pause reicht.',
     brand: 'myTime ist eine Marke ihres Inhabers. Fieravend hat mit myTime nichts zu tun.',
     price: 'Preise ansehen',
   },
   en: {
-    title: 'Switch from myTime · Fieravend',
+    title: 'A myTime alternative without subscription: switch with CSV',
     desc: 'Using myTime and want to switch? Bring your entries along as CSV and enter your current overtime and leave as a starting point.',
     label: 'Switch from myTime',
     h1: 'Bring your myTime data along.',
@@ -43,7 +43,7 @@ const C = {
     fallbackH: 'If something does not fit',
     fallbackP: 'Then simply enter your current overtime and leave balance as a starting point. From today Fieravend counts on, and your old numbers stay in your old app or in the CSV file.',
     aboH: 'What about your subscription?',
-    aboP: 'Cancel it in your Apple account settings once you are sure everything is there. Fieravend has no subscription. You try everything for 30 days and buy once afterwards if it suits you.',
+    aboP: 'Cancel it in your Apple account settings once you are sure everything is there. Fieravend has no subscription. You try everything for 30 days and buy once afterwards if it suits you. Clocking in and backup never cost extra in Fieravend, even without buying.',
     later: 'We are working on importing the myTime backup. Until that is done, we only promise the CSV file.',
     other: 'Coming from Excel or another app? A CSV file with date, start, end and break is enough.',
     brand: 'myTime is a trademark of its owner. Fieravend is not related to myTime.',
@@ -58,7 +58,7 @@ export default function mytime(lang) {
 <section class="page-head">
   <div class="wrap head-grid">
     <div>
-      <p class="eyebrow">${c.label}</p>
+      
       <h1>${c.h1}</h1>
       <p class="lede">${c.lede}</p>
     </div>
@@ -81,7 +81,7 @@ export default function mytime(lang) {
 </section>
 
 <section class="band">
-  <div class="wrap narrow">${waitlist(lang)}<p class="small muted">${c.brand}</p></div>
+  <div class="wrap narrow">${waitlist(lang, { source: 'mytime' })}<p class="small muted">${c.brand}</p></div>
 </section>`;
   return { title: c.title, desc: c.desc, body };
 }

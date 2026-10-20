@@ -2,12 +2,12 @@
  * Two jobs (secondary audience). Mini-job limit and minimum wage 2026 with source.
  * Values for 2027 are decided: minimum wage 14,60 € (MiLoV5 § 1), mini-job limit 633 € (Minijob-Zentrale) – update on 1 Jan.
  */
-import { jobsDay } from '../art.mjs';
+import { jobsFragment } from '../screens.mjs';
 import { waitlist, stand, href } from '../layout.mjs';
 
 const C = {
   de: {
-    title: 'Für zwei Jobs · Fieravend',
+    title: 'Zwei Jobs und Minijob: Arbeitszeit und Ruhezeit im Blick',
     desc: 'Hauptjob plus Minijob? Fieravend führt jeden Job mit eigenem Soll und Konto, zählt für Pausen und Ruhezeit alles zusammen und zeigt, wie nah du der Minijob-Grenze kommst.',
     label: 'Für zwei Jobs',
     h1: 'Zwei Jobs, ein Blick.',
@@ -29,7 +29,7 @@ const C = {
     src: 'Quelle',
   },
   en: {
-    title: 'For two jobs · Fieravend',
+    title: 'Two jobs and a mini-job: working and rest time in one view',
     desc: 'A main job plus a mini-job? Fieravend keeps each job with its own contract hours and balance, adds everything up for breaks and rest time, and shows how close you are to the mini-job limit.',
     label: 'For two jobs',
     h1: 'Two jobs, one view.',
@@ -60,11 +60,11 @@ export default function zweijobs(lang) {
 <section class="page-head">
   <div class="wrap head-grid">
     <div>
-      <p class="eyebrow">${c.label}</p>
+      
       <h1>${c.h1}</h1>
       <p class="lede">${c.lede}</p>
     </div>
-    <div class="head-art">${jobsDay(lang)}</div>
+    <div class="head-art">${jobsFragment(lang)}</div>
   </div>
 </section>
 
@@ -91,7 +91,7 @@ export default function zweijobs(lang) {
 </section>
 
 <section class="band">
-  <div class="wrap narrow">${waitlist(lang)}</div>
+  <div class="wrap narrow">${waitlist(lang, { source: 'zweijobs' })}</div>
 </section>`;
   return { title: c.title, desc: c.desc, body: lang === 'en' ? body.replace('603 € ÷ 13,90 € = 43,4 h', '€603 ÷ €13.90 = 43.4 h') : body };
 }
