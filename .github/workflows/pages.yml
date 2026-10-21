@@ -3,6 +3,11 @@ on:
   push:
     branches: [main]
     paths: ['site/**', '.github/workflows/pages.yml']
+  # Daily rebuild so scheduled magazine articles go live on their `published` date (site/src/magazin/index.mjs).
+  # 04:17 UTC = 05:17 CET / 06:17 CEST; the build date is the UTC day. Runs only in fieravend-site (see job `if`).
+  # GitHub pauses schedules in public repos after 60 days without commits; the sync from fieravend counts as one.
+  schedule:
+    - cron: '17 4 * * *'
   workflow_dispatch:
 permissions:
   contents: read
@@ -25,7 +30,7 @@ jobs:
         with:
           node-version: 22
       - name: Build site (includes contrast check)
-        run: node site/build.mjs
+        run: node site/build.mjs && node site/tools/check-links.mjs
       - name: Validate HTML
         run: npx --yes html-validate@11.16.4 "site/dist/**/*.html" -c site/.htmlvalidate.json
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3

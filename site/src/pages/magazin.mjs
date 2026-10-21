@@ -7,7 +7,7 @@
  */
 import { waitlist, href, ORG, CRUMB } from '../layout.mjs';
 import { SITE, ROUTES } from '../config.mjs';
-import { ARTICLES, articleKey } from '../magazin/index.mjs';
+import { ARTICLES, SCHEDULED_KEYS, articleKey } from '../magazin/index.mjs';
 
 const T = {
   de: {
@@ -36,15 +36,20 @@ const T = {
   },
 };
 
+/** "24. Oktober 2026" / "24 October 2026" (lists, article head; JSON-LD uses the ISO date). */
 const date = (iso, lang) => {
   const [y, m, d] = iso.split('-').map(Number);
   return lang === 'de' ? `${d}. ${T.de.months[m - 1]} ${y}` : `${d} ${T.en.months[m - 1]} ${y}`;
 };
 const arrow = '<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13,6 19,12 13,18"/></svg>';
 
-/** Turns href="@key" into the path of that page in the language; unknown keys stop the build. */
+/**
+ * Turns href="@key" into the path of that page in the language; unknown keys stop the build.
+ * A link to an article that is not published yet (scheduled) becomes plain text, so nothing points to a missing page.
+ */
 function links(html, lang) {
-  return html.replace(/href="@([a-z0-9-]+)"/g, (_, key) => {
+  return html.replace(/<a href="@([a-z0-9-]+)">(.*?)<\/a>/gs, (all, key, text) => (SCHEDULED_KEYS.has(key) ? text : all))
+    .replace(/href="@([a-z0-9-]+)"/g, (_, key) => {
     if (!ROUTES[key]) throw new Error(`magazin: unknown link key @${key}`);
     return `href="${ROUTES[key][lang]}"`;
   });
@@ -109,7 +114,7 @@ export function articlePage(a) {
       ? `<h2 id="${a.id}-faq">${t.faqH}</h2><dl class="mag-qa">${c.qa.map(([q, x]) => `<div><dt>${q}</dt><dd>${x}</dd></div>`).join('')}</dl>`
       : '';
     const srcs = `<ol class="mag-src">${c.sources.map(([l, u]) => `<li><a href="${u}">${l}</a></li>`).join('')}</ol>`;
-    const rel = c.related.map((k) => `<li><a class="more" href="${href(k, lang)}">${pageName(k, lang)}${arrow}</a></li>`).join('');
+    const rel = c.related.filter((k) => !SCHEDULED_KEYS.has(k)).map((k) => `<li><a class="more" href="${href(k, lang)}">${pageName(k, lang)}${arrow}</a></li>`).join('');
     const body = `
 <article class="mag-article" aria-labelledby="mag-h1">
 <section class="page-head">

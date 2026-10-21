@@ -9,9 +9,9 @@
  * No <form> elements: the CSP has form-action 'none', the mail links are plain mailto links that start.js fills in.
  */
 import { horizon } from '../art.mjs';
+import { phone, phoneShot, tabletShot, watch, watchScreen } from '../devices.mjs';
 import { href, ORG } from '../layout.mjs';
 import { MAIL, SITE, ROUTES, APP_STORE_URL } from '../config.mjs';
-import { feierabendClock } from '../feierabend.mjs';
 import { magazinTeaser } from './magazin.mjs';
 import { todayScreen, monthScreen, calendarScreen, overviewScreen, proofSheet, hintFragment, devicesFragment, clockStages, holidaysFragment, leaveFragment, jobsFragment, countriesFragment } from '../screens.mjs';
 
@@ -44,14 +44,19 @@ const C = {
     whyLink: 'Wenn dein Betrieb kein System hat',
     photo1: 'Stempeluhr der Firma Jundes im Eingang der IG Metall in Hannover.',
     photo2: 'Stempeluhr mit Kartenfächern für Kommen und Gehen, in einem Museum.',
+    stage: {
+      today: 'Fieravend auf dem iPhone, Seite Stempeln: Mira ist seit 7:56 eingestempelt, die Uhr zeigt die heute gearbeitete Zeit auf die Sekunde, darunter Feierabend um 16:14 und ein Balken bis zum Soll.',
+      over: 'Fieravend, Seite Übersicht: Stunden im Jahr, Überstunden, Durchschnitt je Arbeitstag, bezahlte Fehlzeit und die Tage nach Typ.',
+      calc: 'Wann ist heute Feierabend? Zum Rechner',
+    },
     showH: 'So sieht Fieravend aus.',
     show: [
-      ['Stempeln', 'Der Himmel folgt deinem Tag. Oben läuft deine Zeit auf die Sekunde, darunter dein Feierabend und ein Balken bis zum Soll. Dann dein Tag als Band und die Woche auf einen Blick.'],
-      ['Monat', 'Jeder Tag mit seinen Zeiten als Band und der Differenz. Feiertage und Urlaub stehen schon drin.'],
-      ['Kalender', 'Der Monat als Farbfeld: grün für Plus, Abendrot für Minus, Sonne für Urlaub, Fahne für Feiertag.'],
-      ['Übersicht', 'Dein Überstundenkonto wie ein Kontostand über zwölf Monate, dein Urlaub als Punkte.'],
-      ['Nachweis', 'Der Stundenzettel als PDF. Nachgetragenes ist markiert, die Prüfsumme steht unten.'],
-    ],
+      ['Stempeln', 'Oben läuft deine Zeit auf die Sekunde, darunter dein Feierabend und ein Balken bis zum Soll. Pause und „Beginn ändern“ liegen gleich darunter.', 'Fieravend, Seite Stempeln: heute gearbeitet 5:46:07, Feierabend 16:14, noch 2:32, eingestempelt seit 7:56, Knöpfe Ausstempeln, Pause und Beginn ändern.'],
+      ['Dein Tag, deine Woche', 'Dein Tag als Band mit den Pausen, die Woche als Säulen gegen das Soll. Dazu, wie viele Tage es noch bis zum Urlaub sind.', 'Fieravend, Seite Stempeln weiter unten: Tagesband von etwa 8 bis jetzt, Wochensäulen Montag plus 0:42, Dienstag plus 1:00, Woche plus 1:42, noch 19 Tage bis Urlaub, Überstunden plus 41:26.'],
+      ['Monat', 'Jeder Tag mit seinen Zeiten als Band und der Differenz. Feiertage und Urlaub stehen schon drin, unten die Summe.', 'Fieravend, Seite Monat: Oktober 2026 als Liste, jeder Tag mit Typ, Zeiten, Stunden und Differenz, der 3. Oktober als Feiertag, unten Stunden und Überstunden des Monats.'],
+      ['Übersicht', 'Stunden, Überstunden, dein Schnitt je Arbeitstag und deine Tage nach Typ. Genau das, was du fürs Gespräch mit dem Chef brauchst.', 'Fieravend, Seite Übersicht für 2026: 412:46 Stunden, Überstunden plus 22:46, durchschnittlich 8:17 je Arbeitstag, bezahlte Fehlzeit 23:24, darunter die Tage nach Typ.'],
+      ['Nachweis', 'Der Stundenzettel als PDF. Nachgetragenes ist markiert, die Prüfsumme steht unten.', ''],
+],
     showHint: 'Zum Blättern wischen oder mit den Pfeiltasten.',
     dayH: 'Ein Tag mit Fieravend.',
     day: [
@@ -94,7 +99,7 @@ const C = {
       ['Sieht mein Arbeitgeber, was ich eintrage?', 'Nein. Nur du siehst deine Einträge. Teilen tust du nur, was du selbst als PDF oder CSV verschickst.'],
       ['Brauche ich ein Konto?', 'Nein. Du lädst die App und fängst an. Mit iCloud sind deine Daten auch auf dem iPad.'],
       ['Und wenn ich vergesse zu stempeln?', 'Dann trägst du die Zeit nach. Auf Wunsch erinnert Fieravend dich morgens ans Einstempeln und abends, wenn du noch eingestempelt bist.'],
-      ['Ich komme von myTime oder Excel. Muss ich neu anfangen?', 'Nein. Du nimmst deine Einträge als CSV mit und trägst deinen Überstunden- und Urlaubsstand als Startwert ein.'],
+      ['Ich komme von einer anderen App oder Excel. Muss ich neu anfangen?', 'Nein. Du nimmst deine Einträge als CSV mit und trägst deinen Überstunden- und Urlaubsstand als Startwert ein.'],
       ['Ich arbeite auch am Wochenende oder an Feiertagen. Rechnet Fieravend das richtig?', 'Ja. Ist der Tag für dich sonst frei, ist jede Stunde Plus. Für Schichtarbeit gibt es das Modell „Wechselnde Tage (Dienstplan)“, und fehlt dir ein Ersatzruhetag, sagt Fieravend es dir.'],
       ['Gilt das auch in Österreich und der Schweiz?', 'Ja. Feiertage, Pausen und Ruhezeiten rechnet Fieravend nach dem Gesetz des Landes, in dem dein Job ist. Das gilt auch fürs Vereinigte Königreich. In anderen EU-Ländern gelten die Grundregeln der EU, überall sonst deine eigenen Werte.'],
       ['Gibt es Fieravend für die Apple Watch und das iPad?', 'Ja. An der Uhr siehst du den Stand von heute und stempelst ein, machst Pause oder stempelst aus. Dazu gibt es Komplikationen fürs Zifferblatt. Die Daten bleiben auf dem iPhone. Auf dem iPad hat Fieravend eine eigene Ansicht mit Seitenleiste.'],
@@ -135,14 +140,19 @@ const C = {
     whyLink: 'When your workplace has no system',
     photo1: 'Jundes time clock in the entrance of IG Metall in Hanover.',
     photo2: 'Time clock with card racks for clocking in and out, in a museum.',
+    stage: {
+      today: 'Fieravend on the iPhone, Clock screen: Mira clocked in at 7:56, the clock shows the time worked today to the second, below it done at 16:14 and a bar to the target.',
+      over: 'Fieravend, Overview screen: hours this year, overtime, average per workday, paid absence and the days by type.',
+      calc: 'When do you finish today? Open the calculator',
+    },
     showH: 'What Fieravend looks like.',
     show: [
-      ['Clock', 'The sky follows your day. At the top your time runs to the second, below it when you are done and a bar towards your target. Then your day as a band and the week at a glance.'],
-      ['Month', 'Every day with its times as a band and the difference. Public holidays and leave are already in.'],
-      ['Calendar', 'The month as a colour field: green for plus, evening red for minus, a sun for leave, a flag for holidays.'],
-      ['Overview', 'Your overtime balance like a bank balance over twelve months, your leave as dots.'],
-      ['Record', 'The time sheet as a PDF. Anything added later is marked, the checksum is at the bottom.'],
-    ],
+      ['Clock', 'At the top your time runs to the second, below it when you are done and a bar towards your target. Break and “Change start” sit right below.', 'Fieravend, Clock screen: worked today 5:46:07, done at 16:14, 2:32 to go, clocked in since 7:56, buttons Clock out, Break and Change start.'],
+      ['Your day, your week', 'Your day as a band with its breaks, the week as columns against your target. Plus how many days are left until your leave.', 'Fieravend, Clock screen further down: day band from about 8 until now, week columns Monday plus 0:42, Tuesday plus 1:00, week plus 1:42, 19 days until leave, overtime plus 41:26.'],
+      ['Month', 'Every day with its times as a band and the difference. Public holidays and leave are already in, the total sits at the bottom.', 'Fieravend, Month screen: October 2026 as a list, every day with its type, times, hours and difference, 3 October as a public holiday, the month’s hours and overtime at the bottom.'],
+      ['Overview', 'Hours, overtime, your average per workday and your days by type. Just what you need for the talk with your boss.', 'Fieravend, Overview screen for 2026: 412:46 hours, overtime plus 22:46, an average of 8:17 per workday, paid absence 23:24, below it the days by type.'],
+      ['Record', 'The time sheet as a PDF. Anything added later is marked, the checksum is at the bottom.', ''],
+],
     showHint: 'Swipe or use the arrow keys to browse.',
     dayH: 'A day with Fieravend.',
     day: [
@@ -185,7 +195,7 @@ const C = {
       ['Does my employer see what I enter?', 'No. Only you see your entries. You share only what you send yourself as PDF or CSV.'],
       ['Do I need an account?', 'No. You download the app and start. With iCloud your data is on your iPad too.'],
       ['What if I forget to clock in?', 'Then you add the time later. If you like, Fieravend reminds you to clock in in the morning and in the evening if you are still clocked in.'],
-      ['I am coming from myTime or Excel. Do I start over?', 'No. You bring your entries along as CSV and enter your overtime and leave balance as a starting point.'],
+      ['I am coming from another app or Excel. Do I start over?', 'No. You bring your entries along as CSV and enter your overtime and leave balance as a starting point.'],
       ['I also work weekends or public holidays. Does Fieravend count that correctly?', 'Yes. If the day would otherwise be off, every hour is plus. For shift work there is the “Changing days (rota)” model, and if you are owed a replacement rest day, Fieravend tells you.'],
       ['Does it work in Austria and Switzerland?', 'Yes. Public holidays, breaks and rest times follow the law of the country your job is in. That includes the UK. Other EU countries get the basic EU rules, anywhere else your own values.'],
       ['Is there an Apple Watch and iPad version?', 'Yes. On the watch you see today’s status and clock in, take a break or clock out. There are complications for the watch face too. The data stays on the iPhone. On the iPad Fieravend has its own layout with a sidebar.'],
@@ -206,10 +216,18 @@ const __mail = (c) => `mailto:${MAIL}?subject=${encodeURIComponent(c.mailSub)}&a
 
 export default function start(lang) {
   const c = C[lang];
-  const screens = [todayScreen(lang), monthScreen(lang), calendarScreen(lang), overviewScreen(lang), proofSheet(lang)];
-  const panels = screens.map((s, i) => `<li class="rail-item"><figure class="rail-fig">${s}<figcaption><b>${c.show[i][0]}</b><span>${c.show[i][1]}</span></figcaption></figure></li>`).join('');
+  // Real screenshots in an iPhone frame; the HTML screens stand in where no screenshot exists yet.
+  const rail = [['heute', todayScreen], ['heute-woche', calendarScreen], ['monat', monthScreen], ['uebersicht', overviewScreen], [null, proofSheet]];
+  const panels = rail.map(([name, html], i) => {
+    const dev = name ? phoneShot(name, lang, c.show[i][2]) : '';
+    return `<li class="rail-item${dev ? ' has-dev' : ''}"><figure class="rail-fig">${dev || html(lang)}<figcaption><b>${c.show[i][0]}</b><span>${c.show[i][1]}</span></figcaption></figure></li>`;
+  }).join('');
   const steps = c.day.map(([h, p], i) => `<li class="day-step" data-step="${['in', 'pause', 'out'][i]}"><h3>${h}</h3><p>${p}</p></li>`).join('');
-  const frag = { holidays: holidaysFragment, leave: leaveFragment, hint: hintFragment, jobs: jobsFragment, proof: (l) => proofSheet(l, { crop: true }), countries: countriesFragment, devices: devicesFragment };
+  const frag = { holidays: holidaysFragment, leave: leaveFragment, hint: hintFragment, jobs: jobsFragment, proof: (l) => proofSheet(l, { crop: true }), countries: countriesFragment, devices: (l) => {
+    // iPad with the split view, the watch in front; the list fragment stays as a fallback without screenshots.
+    const pad = tabletShot('ipad-heute', l, l === 'de' ? 'Fieravend auf dem iPad: links die Seitenleiste mit Stempeln, Monat, Übersicht und Export, rechts die Seite Heute mit laufender Uhr, Tagesband und Woche.' : 'Fieravend on the iPad: the sidebar with Clock, Month, Overview and Export on the left, the Today screen with the running clock, day band and week on the right.');
+    return pad ? `<div class="dev-group">${pad}${watch(watchScreen(l))}</div>` : devicesFragment(l);
+  } };
   const feats = c.feat.map(([h, p, q, k]) => `<li class="feat reveal"><div class="feat-panel">${frag[k](lang)}</div><div class="feat-text"><h3>${h}</h3><p>${p}</p><p class="feat-more">${q}</p></div></li>`).join('');
   const laws = c.laws.map((l) => `<li>${l}</li>`).join('');
   const head = c.plans.map(([n, p, s], i) => `<th scope="col" class="${i === 3 ? 'is-rec' : ''}"><span class="pt-name">${n}</span> <span class="pt-price num">${p}</span> <span class="pt-per">${s}</span></th>`).join('');
@@ -232,7 +250,16 @@ export default function start(lang) {
     </div>
     <div class="hero-art">${horizon()}</div>
   </div>
-  <div class="hero-light"><div class="hero-tool">${feierabendClock(lang)}<p class="hero-tool-more"><a href="${href('feierabend', lang)}">${lang === 'de' ? 'Für Österreich, die Schweiz und mehr Stunden: Feierabend-Rechner' : 'For Austria, Switzerland and other hours: finish-time calculator'}</a></p></div></div>
+  <div class="hero-stage">
+    <div class="stage">
+      <div class="stage-devs">
+        ${phoneShot('heute', lang, c.stage.today, { cls: 'dev-main', eager: true }) || phone(todayScreen(lang), 'dev-main')}
+        ${phoneShot('uebersicht', lang, c.stage.over, { cls: 'dev-back' })}
+        ${watch(watchScreen(lang), 'dev-wrist')}
+      </div>
+      <p class="stage-note"><a href="${href('feierabend', lang)}">${c.stage.calc}</a></p>
+    </div>
+  </div>
 </section>
 
 <section class="why" aria-labelledby="why">
@@ -343,7 +370,7 @@ export default function start(lang) {
     { '@type': 'WebSite', '@id': `${SITE}/#site`, name: 'Fieravend', url, inLanguage: lang, publisher: { '@id': ORG['@id'] } },
     { '@type': 'MobileApplication', '@id': `${SITE}/#app`, name: 'Fieravend', url, operatingSystem: lang === 'de' ? 'iOS 18, iPadOS 18 und watchOS 11 oder neuer' : 'iOS 18, iPadOS 18 and watchOS 11 or later', applicationCategory: 'BusinessApplication',
       inLanguage: ['de', 'en'], description: c.desc, publisher: { '@id': ORG['@id'] }, countriesSupported: ['DE', 'AT', 'CH', 'GB', 'EU'],
-      featureList: c.feat.map(([h]) => h).concat(lang === 'de' ? ['Stempeluhr mit Sperrbildschirm und Live-Aktivität', 'Apple Watch mit Komplikationen', 'iPad mit Seitenleiste', 'Stundenzettel als PDF und CSV', 'Import aus myTime und CSV', 'Kein Konto, kein Server, kein Tracking'] : ['Clock with lock screen and Live Activity', 'Apple Watch with complications', 'iPad with sidebar', 'Time sheet as PDF and CSV', 'Import from myTime and CSV', 'No account, no server, no tracking']),
+      featureList: c.feat.map(([h]) => h).concat(lang === 'de' ? ['Stempeluhr mit Sperrbildschirm und Live-Aktivität', 'Apple Watch mit Komplikationen', 'iPad mit Seitenleiste', 'Stundenzettel als PDF und CSV', 'Import aus anderen Apps per CSV', 'Kein Konto, kein Server, kein Tracking'] : ['Clock with lock screen and Live Activity', 'Apple Watch with complications', 'iPad with sidebar', 'Time sheet as PDF and CSV', 'Import from other apps via CSV', 'No account, no server, no tracking']),
       ...(APP_STORE_URL ? { downloadUrl: APP_STORE_URL, offers: [{ '@type': 'Offer', price: '0', priceCurrency: 'EUR', description: lang === 'de' ? '30 Tage testen' : '30-day trial' }] } : {}) },
     { '@type': 'FAQPage', inLanguage: lang, mainEntity: c.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
   ];

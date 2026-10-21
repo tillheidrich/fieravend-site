@@ -5,6 +5,7 @@
 import { SITE, ROUTES, MAIL, STAND, PROVIDER, APP_STORE_ID, APP_STORE_URL } from './config.mjs';
 import { mark } from './art.mjs';
 import { CREDITS } from './credits.mjs';
+import { SCHEDULED_KEYS } from './magazin/index.mjs';
 
 export const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 export const href = (key, lang) => ROUTES[key][lang];
@@ -86,7 +87,8 @@ function nav(page) {
 
 function footer(page) {
   const u = UI[page.lang];
-  const list = (arr) => arr.map(([k, l]) => `<li><a href="${href(k, page.lang)}">${l}</a></li>`).join('');
+  // Scheduled magazine articles are not built yet: leave them out instead of linking to a missing page.
+  const list = (arr) => arr.filter(([k]) => !SCHEDULED_KEYS.has(k)).map(([k, l]) => `<li><a href="${href(k, page.lang)}">${l}</a></li>`).join('');
   const go = cta(page.lang, 'Fuß');
   const credits = CREDITS.map((c) => `<a href="${c.page}">${c.title}</a> (${c.creator}, <a href="${c.licenseUrl}">${c.license}</a>)`).join(' · ');
   return `<footer class="site-foot" aria-label="${u.foot}"><div class="foot-board">` +

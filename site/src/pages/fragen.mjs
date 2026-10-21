@@ -21,7 +21,7 @@ const C = {
       ]],
       ['Kosten und Umzug', [
         ['Was kostet Fieravend?', 'Du testest 30 Tage lang alles, ohne Abo. Danach ist geplant: Plus für einmalig 49,99 € oder ein Jahrespass für 14,99 €. Der Jahrespass gilt für ein Kalenderjahr, ab Oktober kaufst du ihn für das nächste Jahr. Er verlängert sich nicht von selbst. Ohne Kauf kannst du weiter stempeln, die letzten 7 Tage sehen und ein Backup machen. PRICES'],
-        ['Ich nutze schon myTime oder Excel. Muss ich von vorn anfangen?', 'Nein. Du nimmst deine Einträge als CSV-Datei mit und trägst deinen aktuellen Überstunden- und Urlaubsstand als Startwert ein. MYTIME'],
+        ['Ich nutze schon eine andere App oder Excel. Muss ich von vorn anfangen?', 'Nein. Du nimmst deine Einträge als CSV-Datei mit und trägst deinen aktuellen Überstunden- und Urlaubsstand als Startwert ein. MYTIME'],
         ['Was passiert, wenn ich mein iPhone verliere?', 'Mit iCloud sind deine Daten auf deinen anderen Geräten und kommen auf ein neues iPhone mit. Ohne iCloud mach ab und zu ein Backup.'],
       ]],
       ['Wochenende, Feiertage, Schicht', [
@@ -54,7 +54,7 @@ const C = {
       ]],
       ['Cost and switching', [
         ['What does Fieravend cost?', 'You try everything for 30 days, without a subscription. After that the plan is Plus for €49.99 once or a Year Pass for €14.99. The Year Pass covers one calendar year, from October you buy it for the next year. It does not renew by itself. Without buying you can still clock in, see the last 7 days and make a backup. PRICES'],
-        ['I already use myTime or Excel. Do I have to start over?', 'No. You bring your entries along as a CSV file and enter your current overtime and leave balance as a starting point. MYTIME'],
+        ['I already use another app or Excel. Do I have to start over?', 'No. You bring your entries along as a CSV file and enter your current overtime and leave balance as a starting point. MYTIME'],
         ['What happens if I lose my iPhone?', 'With iCloud your data is on your other devices and moves to a new iPhone. Without iCloud, make a backup now and then.'],
       ]],
       ['Weekends, holidays, shifts', [

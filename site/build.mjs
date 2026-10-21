@@ -12,6 +12,8 @@
  * node site/tools/shots.mjs (screenshots). Deploy: .github/workflows/pages.yml (GitHub Pages).
  * Magazin: data in site/src/magazin/ (how to add an article: index.mjs there). Social cards (not published):
  * node site/tools/social.mjs -> marketing/social/.
+ * Scheduled articles: only articles with `published` <= build date are built (today in UTC, or
+ *   FV_BUILD_DATE=YYYY-MM-DD node site/build.mjs to preview a later day). Pages rebuild daily via pages.yml.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -32,7 +34,7 @@ import nachweis from './src/pages/nachweis.mjs';
 import wochenende from './src/pages/wochenende.mjs';
 import { impressum, datenschutz, notFound } from './src/pages/legal.mjs';
 import { magazinIndex, articlePage } from './src/pages/magazin.mjs';
-import { ARTICLES, articleKey } from './src/magazin/index.mjs';
+import { ARTICLES, SCHEDULED, BUILD_DATE, articleKey } from './src/magazin/index.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(HERE, 'dist');
@@ -120,7 +122,7 @@ fs.writeFileSync(path.join(DIST, 'llms.txt'), [
   '- Rechtslage Überstunden (Deutschland): Wer Überstunden einklagt, muss sie darlegen und beweisen (BAG, 04.05.2022, 5 AZR 359/21), trotz der Erfassungspflicht nach EuGH C-55/18 und BAG 1 ABR 22/21.',
   '- Fieravend gibt Hinweise und ist keine Rechts- oder Steuerberatung.',
   '- Haltung: Für dich, nicht für deinen Chef. Jede Stunde zählt, auch die nach Feierabend. Nachtragen ist erlaubt und wird als „nachgetragen“ markiert.',
-  '- Magazin: Artikel mit Quellen und Prüfdatum zu unbezahlten Überstunden, Arbeit am Abend, Überstunden-Nachweis, flexiblen Wochen, AD(H)S und Arbeitszeit weltweit (Seiten unten).',
+  '- Magazin: Artikel mit Quellen und Prüfdatum, unter anderem zu unbezahlten Überstunden, Arbeit am Abend, Überstunden-Nachweis, flexiblen Wochen, AD(H)S und Arbeitszeit weltweit (alle Artikel in der Liste unten).',
   '',
   '## Seiten (Deutsch)',
   ...pageList('de'),
@@ -147,4 +149,6 @@ for (const u of written) {
   }
 }
 if (broken) process.exit(1);
+console.log(`build date ${BUILD_DATE}: ${ARTICLES.length} articles published` +
+  (SCHEDULED.length ? `, ${SCHEDULED.length} scheduled (${SCHEDULED.map((a) => `${a.id} ${a.published}`).join(', ')})` : ''));
 console.log(`built ${written.length} pages into ${path.relative(process.cwd(), DIST) || DIST}`);

@@ -958,3 +958,74 @@ select { max-width: 16rem; }
 .ui-stage-sig .ui-sig-l { font-size: .9375rem; font-weight: 600; }
 .ui-stage-sig .ui-sig-s { font-size: .875rem; font-weight: 550; }
 .st-out .ui-stage-sig { justify-items: center; text-align: center; }
+
+/* ------------------------------------------------------------ device frames (21.10.2026): real screenshots in CSS hardware.
+   The one place with shadows: a device is a physical object. Shadows are wide, soft and tinted navy, never black. */
+.dev { --w: 280px; position: relative; width: var(--w); flex: none; box-sizing: border-box; }
+.dev-screen { position: relative; overflow: hidden; background: #F7F7F4; isolation: isolate; }
+@media (prefers-color-scheme: dark) { .dev-screen { background: #121826; } }
+.dev-screen picture, .dev-screen img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.dev-phone { padding: calc(var(--w) * .034); border-radius: calc(var(--w) * .17);
+  background: linear-gradient(150deg, #4A4F59 0%, #23262D 22%, #15171C 55%, #2C3038 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .16), inset 0 0 0 calc(var(--w) * .011) #08090C,
+    0 calc(var(--w) * .2) calc(var(--w) * .34) calc(var(--w) * -.1) rgba(31, 43, 69, .42),
+    0 calc(var(--w) * .05) calc(var(--w) * .1) calc(var(--w) * -.04) rgba(31, 43, 69, .28); }
+.dev-phone .dev-screen { aspect-ratio: 1206 / 2622; border-radius: calc(var(--w) * .138); }
+.dev-island { position: absolute; z-index: 1; top: 1.9%; left: 50%; width: 29%; height: 3.5%; transform: translateX(-50%); border-radius: 999px; background: #000; }
+.dev-btn { position: absolute; width: 3px; border-radius: 2px; background: #2C3038; }
+.dev-btn-a { left: -2px; top: 19%; height: 6%; }
+.dev-btn-b { left: -2px; top: 28%; height: 9%; }
+.dev-btn-c { right: -2px; top: 26%; height: 13%; }
+.dev-tablet { --w: 520px; padding: calc(var(--w) * .028); border-radius: calc(var(--w) * .07);
+  background: linear-gradient(150deg, #4A4F59, #1B1E24 40%, #2C3038);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .14), 0 calc(var(--w) * .12) calc(var(--w) * .22) calc(var(--w) * -.08) rgba(31, 43, 69, .4); }
+.dev-tablet .dev-screen { aspect-ratio: 2064 / 2752; border-radius: calc(var(--w) * .045); }
+.dev-watch { --w: 150px; padding: calc(var(--w) * .07); border-radius: calc(var(--w) * .3);
+  background: linear-gradient(150deg, #5A5F69, #1D2026 45%, #33373F);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .18), 0 calc(var(--w) * .18) calc(var(--w) * .3) calc(var(--w) * -.08) rgba(31, 43, 69, .45); }
+.dev-watch .dev-screen { aspect-ratio: 422 / 514; border-radius: calc(var(--w) * .24); background: #000; }
+.dev-crown { position: absolute; right: calc(var(--w) * -.05); top: 26%; width: calc(var(--w) * .07); height: 17%; border-radius: 4px; background: linear-gradient(90deg, #2C3038, #6A707B); }
+.dev-side { position: absolute; right: calc(var(--w) * -.03); top: 52%; width: calc(var(--w) * .04); height: 20%; border-radius: 3px; background: #2C3038; }
+
+/* the watch app in HTML (devices.mjs watchScreen), same layout as App/FieravendWatch */
+.w-ui { height: 100%; color: #F4F1EA; font-family: ui-rounded, system-ui, var(--fv-font); }
+.w-ui > div { display: flex; flex-direction: column; gap: calc(var(--w) * .012); padding: calc(var(--w) * .1) calc(var(--w) * .08) calc(var(--w) * .06); height: 100%; box-sizing: border-box; }
+.w-title { font-size: calc(var(--w) * .085); font-weight: 650; color: #F08A4B; margin-bottom: calc(var(--w) * .02); }
+.w-state { font-size: calc(var(--w) * .07); color: #F08A4B; }
+.w-num { font-size: calc(var(--w) * .25); font-weight: 600; line-height: 1; letter-spacing: -.02em; }
+.w-muted { font-size: calc(var(--w) * .07); color: #B3AEA6; }
+.w-end { font-size: calc(var(--w) * .07); color: #F08A4B; font-weight: 600; }
+.w-plus { font-size: calc(var(--w) * .07); color: #5FC98A; }
+.w-btn { margin-top: calc(var(--w) * .03); padding: calc(var(--w) * .045); border-radius: 999px; text-align: center; font-size: calc(var(--w) * .075); font-weight: 600; background: rgba(255, 255, 255, .16); }
+.w-btn-out { background: rgba(255, 138, 128, .3); }
+
+/* hero stage: the app itself instead of a drawing */
+.hero-stage { position: relative; background: var(--fv-surface); display: grid; place-items: center; overflow: hidden; padding: clamp(40px, 6vw, 72px) var(--gutter) clamp(48px, 6vw, 80px); }
+.hero-stage::before { content: ""; position: absolute; width: min(46rem, 120%); aspect-ratio: 1; border-radius: 50%; left: 50%; top: 54%; transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, var(--fv-sky-evening), transparent 72%); opacity: .9; pointer-events: none; }
+.stage { position: relative; display: grid; justify-items: center; gap: 1.5rem; }
+.stage-devs { position: relative; display: flex; align-items: flex-end; justify-content: center; }
+.stage-devs .dev-main { --w: clamp(230px, 21vw, 300px); z-index: 2; }
+.stage-devs .dev-back { --w: clamp(200px, 17vw, 250px); position: absolute; z-index: 1; left: 58%; bottom: 14%; opacity: .96; display: none; }
+.stage-devs { --wrist: clamp(104px, 9vw, 136px); padding-left: calc(var(--wrist) * .55); }
+.stage-devs .dev-wrist { --w: var(--wrist); position: absolute; z-index: 3; left: 0; bottom: 9%; }
+.stage-note { position: relative; margin: 0; font-size: .9375rem; text-align: center; }
+@media (min-width: 60rem) {
+  .stage-devs { padding-right: clamp(80px, 9vw, 150px); }
+  .stage-devs .dev-back { display: block; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .js .stage-devs .dev-main { animation: devup 1000ms var(--ease-out) 150ms both; }
+  .js .stage-devs .dev-back { animation: devup 1000ms var(--ease-out) 320ms both; }
+  .js .stage-devs .dev-wrist { animation: devup 1000ms var(--ease-out) 480ms both; }
+}
+@keyframes devup { from { opacity: 0; transform: translateY(48px) scale(.98); } to { opacity: 1; transform: none; } }
+
+/* rail and feature panels with devices */
+.rail-item.has-dev { width: auto; }
+.rail-item .dev-phone { --w: clamp(240px, 70vw, 290px); }
+.rail-item.has-dev .rail-fig figcaption { max-width: 28ch; }
+.feat-panel:has(.dev-group) { container-type: inline-size; }
+.feat-panel .dev-group { display: flex; align-items: flex-end; justify-content: center; padding: 1rem 0 .25rem; }
+.feat-panel .dev-group .dev-tablet { --w: 74cqw; }
+.feat-panel .dev-group .dev-watch { --w: 25cqw; margin-left: -9cqw; margin-bottom: -2px; z-index: 1; }

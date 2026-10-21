@@ -6,7 +6,7 @@ import { waitlist, href } from '../layout.mjs';
 
 const C = {
   de: {
-    title: 'myTime-Alternative ohne Abo: Umzug mit CSV',
+    title: 'Von myTime zu Fieravend wechseln: Umzug mit CSV',
     desc: 'Du nutzt myTime und willst wechseln? Nimm deine Einträge als CSV mit und trag deinen aktuellen Überstunden- und Urlaubsstand als Startwert ein.',
     label: 'Umzug von myTime',
     h1: 'Bring deine myTime-Daten mit.',
@@ -28,7 +28,7 @@ const C = {
     price: 'Preise ansehen',
   },
   en: {
-    title: 'A myTime alternative without subscription: switch with CSV',
+    title: 'Switching from myTime to Fieravend: move with CSV',
     desc: 'Using myTime and want to switch? Bring your entries along as CSV and enter your current overtime and leave as a starting point.',
     label: 'Switch from myTime',
     h1: 'Bring your myTime data along.',
