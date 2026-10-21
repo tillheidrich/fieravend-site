@@ -45,7 +45,7 @@ export default {
       ] },
       { h: 'Was Fieravend dafür hat', list: [
         ['Erinnerungen, die fragen', 'Morgens ans Einstempeln, abends, wenn die Uhr noch läuft. Auf Wunsch auch am Arbeitsort: Fieravend fragt „Einstempeln?“, stempelt aber nie von selbst.'],
-        ['Zeit, die man sieht', 'Die Sonne wandert über einen Bogen bis zum Feierabend, auf Wunsch mit Countdown im Sperrbildschirm.'],
+        ['Zeit, die man sieht', 'Deine Zeit läuft auf die Sekunde mit, darunter steht, wann Feierabend ist, und ein Balken zeigt, wie weit du beim Soll bist. Auf Wunsch mit Countdown im Sperrbildschirm.'],
         ['Stempeln ohne die App zu suchen', 'Widget, Kontrollzentrum, Aktionstaste, oder ein NFC-Sticker an der Tür.'],
         ['Keine Strafen', 'Serien wie „Pausen eingehalten“ zählen nur Erholung, nie Arbeit, und enden still, ohne Hinweis und ohne Neustart-Druck. Keine Punkte für mehr Arbeit, keine Rangliste.'],
       ] },
@@ -105,7 +105,7 @@ export default {
       ] },
       { h: 'What Fieravend has for this', list: [
         ['Reminders that ask', 'In the morning to clock in, in the evening if the clock is still running. If you like, also at your workplace: Fieravend asks “Clock in?”, but never clocks you in by itself.'],
-        ['Time you can see', 'The sun moves along an arc towards the end of your day, with a countdown on the lock screen if you like.'],
+        ['Time you can see', 'Your time runs to the second, below it when you are done, and a bar shows how far you are towards your target. With a countdown on the lock screen if you like.'],
         ['Clocking in without hunting for the app', 'Widget, Control Centre, Action button, or an NFC sticker on the door.'],
         ['No penalties', 'Streaks like “breaks taken” only count rest, never work, and end quietly, without a message and without pressure to restart. No points for more work, no leaderboard.'],
       ] },

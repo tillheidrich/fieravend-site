@@ -20,9 +20,9 @@ const C = {
         ['Taugt mein Stundenzettel als Beweis?', 'Fieravend hält fest, wann du gestempelt hast und was du später geändert hast. Das macht deinen Nachweis glaubwürdiger. Ob er vor Gericht reicht, entscheidet im Streitfall das Gericht. Fieravend ist keine Rechtsberatung.'],
       ]],
       ['Kosten und Umzug', [
-        ['Was kostet Fieravend?', 'Du testest 30 Tage lang alles, ohne Abo. Danach ist geplant: Plus für einmalig 49,99 €, zum Start 34,99 € bis 31.1.2027, oder ein Jahrespass für 14,99 €, der sich nicht verlängert. Ohne Kauf kannst du weiter stempeln, die letzten 7 Tage sehen und ein Backup machen. PRICES'],
+        ['Was kostet Fieravend?', 'Du testest 30 Tage lang alles, ohne Abo. Danach ist geplant: Plus für einmalig 49,99 € oder ein Jahrespass für 14,99 €. Der Jahrespass gilt für ein Kalenderjahr, ab Oktober kaufst du ihn für das nächste Jahr. Er verlängert sich nicht von selbst. Ohne Kauf kannst du weiter stempeln, die letzten 7 Tage sehen und ein Backup machen. PRICES'],
         ['Ich nutze schon myTime oder Excel. Muss ich von vorn anfangen?', 'Nein. Du nimmst deine Einträge als CSV-Datei mit und trägst deinen aktuellen Überstunden- und Urlaubsstand als Startwert ein. MYTIME'],
-        ['Was passiert, wenn ich mein iPhone verliere?', 'Mit iCloud sind deine Daten auf deinen anderen Geräten und kommen auf ein neues iPhone mit. Ohne iCloud mach ab und zu ein Backup. Fieravend erinnert dich daran.'],
+        ['Was passiert, wenn ich mein iPhone verliere?', 'Mit iCloud sind deine Daten auf deinen anderen Geräten und kommen auf ein neues iPhone mit. Ohne iCloud mach ab und zu ein Backup.'],
       ]],
       ['Wochenende, Feiertage, Schicht', [
         ['Was passiert, wenn ich an einem Feiertag oder am Wochenende arbeite?', 'Ist der Tag für dich sonst frei, ist dein Soll null und jede Stunde ein Plus. Gehört der Samstag zu deinen festen Arbeitstagen, gilt dort dein normales Soll. WEEKEND'],
@@ -30,9 +30,11 @@ const C = {
         ['Steht mir für einen gearbeiteten Sonntag ein freier Tag zu?', 'In Deutschland ja, ein Ersatzruhetag innerhalb von zwei Wochen, für einen Feiertag innerhalb von acht Wochen (§ 11 ArbZG). Fieravend erinnert dich daran, und du trägst ihn als „Ersatzruhetag“ ein.'],
       ]],
       ['Länder und Geräte', [
-        ['Gilt Fieravend auch in Österreich und der Schweiz?', 'Ja. Fieravend rechnet Feiertage, Pausen und Ruhezeiten für Deutschland, Österreich und die Schweiz nach dem jeweiligen Gesetz. Welches Land gilt, hängt am Arbeitsort deines Jobs, nicht an der Sprache deines iPhones. In den anderen EU-Ländern nutzt Fieravend die Grundregeln der EU-Arbeitszeitrichtlinie (2003/88/EG).'],
+        ['Gilt Fieravend auch in Österreich und der Schweiz?', 'Ja. Fieravend rechnet Feiertage, Pausen und Ruhezeiten für Deutschland, Österreich und die Schweiz nach dem jeweiligen Gesetz, fürs Vereinigte Königreich nach den Working Time Regulations 1998. Welches Land gilt, hängt am Arbeitsort deines Jobs, nicht an der Sprache deines iPhones. In den anderen EU-Ländern nutzt Fieravend die Grundregeln der EU-Arbeitszeitrichtlinie (2003/88/EG).'],
+        ['Und wenn mein Land nicht dabei ist?', 'Du wählst trotzdem dein Land als Arbeitsort. Fieravend rechnet dann mit deinen eigenen Werten: Wochenstunden, Urlaub, Feiertage (auch aus einer Kalenderdatei) und auf Wunsch eine eigene Pausenregel. Gesetzes-Hinweise gibt es dort keine, weil Fieravend das Gesetz dort nicht kennt.'],
         ['Wann kommt Fieravend in den App Store?', 'Bald. Ein Datum gibt es noch nicht. Schreib uns eine Mail, dann sagen wir dir Bescheid.'],
-        ['Gibt es Fieravend für Android?', 'Noch nicht. Erst kommt das iPhone, dann sehen wir weiter. Wenn du Bescheid bekommen willst, schreib uns eine Mail mit dem Betreff „Android“.'],
+        ['Gibt es Fieravend für die Apple Watch und das iPad?', 'Ja. An der Apple Watch siehst du den Stand von heute und stempelst ein, machst Pause oder stempelst aus. Dazu gibt es Komplikationen fürs Zifferblatt. Deine Daten bleiben auf dem iPhone, die Uhr schickt nur deinen Tipp. Auf dem iPad hat Fieravend eine eigene Ansicht mit Seitenleiste, quer und hochkant, auch mit Stage Manager.'],
+        ['Gibt es Fieravend für Android?', 'Noch nicht. Fieravend gibt es für iPhone, iPad und Apple Watch. Wenn du Bescheid bekommen willst, schreib uns eine Mail mit dem Betreff „Android“.'],
       ]],
     ],
     prices: 'Preise ansehen', mytime: 'So geht der Umzug', weekend: 'Mehr zu Wochenende und Feiertagen',
@@ -51,9 +53,9 @@ const C = {
         ['Does my time sheet count as evidence?', 'Fieravend records when you clocked in and what you changed later. That makes your record more credible. Whether it is enough in court is up to the court. Fieravend is not legal advice.'],
       ]],
       ['Cost and switching', [
-        ['What does Fieravend cost?', 'You try everything for 30 days, without a subscription. After that the plan is Plus for €49.99 once, €34.99 at launch until 31 Jan 2027, or a Year Pass for €14.99 that does not renew. Without buying you can still clock in, see the last 7 days and make a backup. PRICES'],
+        ['What does Fieravend cost?', 'You try everything for 30 days, without a subscription. After that the plan is Plus for €49.99 once or a Year Pass for €14.99. The Year Pass covers one calendar year, from October you buy it for the next year. It does not renew by itself. Without buying you can still clock in, see the last 7 days and make a backup. PRICES'],
         ['I already use myTime or Excel. Do I have to start over?', 'No. You bring your entries along as a CSV file and enter your current overtime and leave balance as a starting point. MYTIME'],
-        ['What happens if I lose my iPhone?', 'With iCloud your data is on your other devices and moves to a new iPhone. Without iCloud, make a backup now and then. Fieravend reminds you.'],
+        ['What happens if I lose my iPhone?', 'With iCloud your data is on your other devices and moves to a new iPhone. Without iCloud, make a backup now and then.'],
       ]],
       ['Weekends, holidays, shifts', [
         ['What if I work on a public holiday or at the weekend?', 'If the day would otherwise be off, your target is zero and every hour is plus. If Saturday is one of your fixed working days, your normal target applies there. WEEKEND'],
@@ -61,9 +63,11 @@ const C = {
         ['Do I get a day off for a Sunday I worked?', 'In Germany yes, a replacement rest day within two weeks, for a public holiday within eight weeks (§ 11 ArbZG). Fieravend reminds you, and you enter it as “Replacement rest day”.'],
       ]],
       ['Countries and devices', [
-        ['Does Fieravend work in Austria and Switzerland?', 'Yes. Fieravend handles public holidays, breaks and rest times for Germany, Austria and Switzerland under each country’s law. The country comes from where your job is, not from your iPhone’s language. In other EU countries Fieravend uses the basic rules of the EU Working Time Directive (2003/88/EC).'],
+        ['Does Fieravend work in Austria and Switzerland?', 'Yes. Fieravend handles public holidays, breaks and rest times for Germany, Austria and Switzerland under each country’s law, and for the UK under the Working Time Regulations 1998. The country comes from where your job is, not from your iPhone’s language. In other EU countries Fieravend uses the basic rules of the EU Working Time Directive (2003/88/EC).'],
+        ['What if my country is not included?', 'You still choose your country as the place of work. Fieravend then works with your own values: weekly hours, leave, public holidays (also from a calendar file) and, if you like, your own break rule. There are no law hints there, because Fieravend does not know the law there.'],
         ['When will Fieravend be in the App Store?', 'Soon. There is no date yet. Send us an email and we will let you know.'],
-        ['Is there an Android version?', 'Not yet. The iPhone comes first, then we will see. If you want to hear about it, send us an email with the subject “Android”.'],
+        ['Is there an Apple Watch and iPad version?', 'Yes. On the Apple Watch you see today’s status and clock in, take a break or clock out. There are complications for the watch face too. Your data stays on the iPhone, the watch only sends your tap. On the iPad Fieravend has its own layout with a sidebar, in landscape and portrait, with Stage Manager too.'],
+        ['Is there an Android version?', 'Not yet. Fieravend is for iPhone, iPad and Apple Watch. If you want to hear about it, send us an email with the subject “Android”.'],
       ]],
     ],
     prices: 'See pricing', mytime: 'How switching works', weekend: 'More on weekend and holiday work',

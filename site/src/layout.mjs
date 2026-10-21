@@ -183,8 +183,8 @@ export function cta(lang, source, label) {
 export function waitlist(lang, { tone = 'plain', source = '' } = {}) {
   const live = Boolean(APP_STORE_URL);
   const t = lang === 'de'
-    ? { label: live ? 'Jetzt im App Store' : 'Bald im App Store', p: live ? 'Lade Fieravend und teste 30 Tage lang alles, ohne Abo und ohne Zahlungsdaten.' : 'Fieravend kommt zuerst fürs iPhone. Schreib uns eine Mail, dann sagen wir dir Bescheid, sobald du es laden kannst. Deine Adresse nutzen wir nur dafür und löschen sie danach.' }
-    : { label: live ? 'Now on the App Store' : 'Coming to the App Store', p: live ? 'Download Fieravend and try everything for 30 days, without a subscription or payment details.' : 'Fieravend comes to the iPhone first. Send us an email and we will tell you when you can download it. We use your address only for that and delete it afterwards.' };
+    ? { label: live ? 'Jetzt im App Store' : 'Bald im App Store', p: live ? 'Lade Fieravend und teste 30 Tage lang alles, ohne Abo und ohne Zahlungsdaten.' : 'Fieravend kommt für iPhone, iPad und Apple Watch. Schreib uns eine Mail, dann sagen wir dir Bescheid, sobald du es laden kannst. Deine Adresse nutzen wir nur dafür und löschen sie danach.' }
+    : { label: live ? 'Now on the App Store' : 'Coming to the App Store', p: live ? 'Download Fieravend and try everything for 30 days, without a subscription or payment details.' : 'Fieravend is coming to iPhone, iPad and Apple Watch. Send us an email and we will tell you when you can download it. We use your address only for that and delete it afterwards.' };
   const c = cta(lang, source);
   return `<div class="waitlist waitlist-${tone}"><h2 class="waitlist-h">${t.label}</h2><p>${t.p}</p>` +
     `<p><a class="btn btn-primary" href="${c.href}">${c.label}</a></p>` +

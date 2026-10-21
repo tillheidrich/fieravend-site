@@ -944,3 +944,17 @@ select { max-width: 16rem; }
 .mag-teaser-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: .5rem 2rem; margin-bottom: 1.5rem; }
 .mag-teaser-head h2 { margin: 0; }
 .mag-teaser-head p { margin: 0; }
+
+/* ------------------------------------------------------------ stopwatch on the sky card (app SkyCard, 20.10.2026) */
+.ui-sig-run { justify-items: start; text-align: left; margin-top: 10px; gap: 2px; }
+.ui-sig-run .ui-sig-n { font-size: 2.6rem; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.ui-tbar { display: block; width: 100%; height: 6px; margin-top: 12px; }
+.ui-tbar-track { fill: var(--fv-sky-ink); opacity: .18; }
+.ui-tbar-in { fill: var(--fv-sky-ink); }
+.ui-stage-card.sky-morning, .ui-stage-card.sky-day, .ui-stage-card.sky-evening { color: var(--fv-sky-ink); }
+.ui-stage-card[class*="sky-"] .ui-stage-now, .ui-stage-card[class*="sky-"] .ui-hero { color: var(--fv-sky-ink); }
+.ui-stage-card[class*="sky-"] .ui-horizon { stroke: var(--fv-sky-ink); }
+.ui-stage-sig { display: grid; justify-items: start; text-align: left; width: 100%; gap: 2px; }
+.ui-stage-sig .ui-sig-l { font-size: .9375rem; font-weight: 600; }
+.ui-stage-sig .ui-sig-s { font-size: .875rem; font-weight: 550; }
+.st-out .ui-stage-sig { justify-items: center; text-align: center; }

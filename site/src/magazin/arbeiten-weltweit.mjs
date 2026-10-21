@@ -4,7 +4,7 @@
  * hours worked), Fair Work Ombudsman (right to disconnect, via search on fairwork.gov.au), ILO article on Convention
  * No. 1 (adopted 1919, 46 of 187 member States ratified), C132 Art. 3(3) text (three working weeks, via search), § 26
  * Abs. 8 AZG (RIS). Dropped: Japan, India, Brazil, Ontario details (only secondary sources or not checked).
- * What Fieravend does today: DE, AT, CH packs; other EU countries get the EU baseline; no law hints elsewhere.
+ * What Fieravend does today: DE, AT, CH and UK packs; other EU countries get the EU baseline; everywhere else own values, no law hints.
  */
 export default {
   id: 'welt',
@@ -19,7 +19,7 @@ export default {
     sections: [
       { h: 'Das Land deiner Arbeit zählt', p: [
         'Sam kommt aus Polen und arbeitet in einem Hotel in Österreich. Familie Berg lebt in Deutschland, Herr Berg pendelt in die Schweiz. Welche Regeln gelten? Im Grundsatz die des Landes, in dem gearbeitet wird. Darum fragt Fieravend bei jedem Job nach dem Arbeitsort und rechnet danach, nicht nach der Sprache deines iPhones.',
-        'Für Deutschland, Österreich und die Schweiz kennt Fieravend die Gesetze im Detail: Pausen, Ruhezeit, Höchstarbeitszeit, Feiertage. Für andere EU-Länder rechnet die App nach den Mindestregeln der EU. Für Länder außerhalb der EU gibt es noch keine Gesetzes-Hinweise. Lieber keine Hinweise als falsche.',
+        'Für Deutschland, Österreich und die Schweiz kennt Fieravend die Gesetze im Detail: Pausen, Ruhezeit, Höchstarbeitszeit, Feiertage. Für das Vereinigte Königreich rechnet die App nach den Working Time Regulations 1998, mit den Bank Holidays für England und Wales, Schottland und Nordirland. Für andere EU-Länder rechnet sie nach den Mindestregeln der EU. In allen anderen Ländern rechnet Fieravend mit deinen eigenen Werten und gibt keine Gesetzes-Hinweise. Lieber keine Hinweise als falsche.',
       ] },
       { h: 'EU: Mindestregeln für alle', p: [
         'Die Arbeitszeitrichtlinie 2003/88/EG legt fest, was in jedem EU-Land mindestens gilt. Die Länder dürfen mehr Schutz geben, aber nicht weniger:',
@@ -77,7 +77,7 @@ export default {
     sections: [
       { h: 'The country you work in counts', p: [
         'Sam is from Poland and works at a hotel in Austria. The Berg family lives in Germany, and Mr Berg commutes to Switzerland. Which rules apply? In principle, those of the country where the work is done. That is why Fieravend asks for the place of work for each job and calculates by that, not by your iPhone’s language.',
-        'For Germany, Austria and Switzerland, Fieravend knows the law in detail: breaks, rest periods, maximum hours, public holidays. For other EU countries the app uses the EU minimum rules. For countries outside the EU there are no law hints yet. Better no hints than wrong ones.',
+        'For Germany, Austria and Switzerland, Fieravend knows the law in detail: breaks, rest periods, maximum hours, public holidays. For the UK the app follows the Working Time Regulations 1998, with the bank holidays for England and Wales, Scotland and Northern Ireland. For other EU countries it uses the EU minimum rules. In all other countries Fieravend works with your own values and gives no law hints. Better no hints than wrong ones.',
       ] },
       { h: 'EU: minimum rules for everyone', p: [
         'The Working Time Directive 2003/88/EC sets what applies at least in every EU country. Countries may give more protection, not less:',

@@ -106,13 +106,17 @@ function dayBand({ blocks, now, end, from = 6, to = 18, w = 300, h = 34, mini = 
   return `<svg class="db${mini ? ' db-mini' : ''}" viewBox="0 0 ${w} ${mini ? 18 : h}" aria-hidden="true" focusable="false"><rect class="db-track" x="0" y="${y}" width="${w}" height="${bh}" rx="${bh / 2}"/>${bars}${nowM}${endM}${tk}</svg>`;
 }
 
-/** "Heute" with the sky of the afternoon, the sun on its arc, the signature number, day band and week strip. */
+/** Thin progress bar to today's target, as on the app's sky card (SkyCard.TargetBar). `p` is 0…1. */
+const targetBar = (p) => `<svg class="ui-tbar" viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true" focusable="false"><rect class="ui-tbar-track" x="0" y="0" width="100" height="6" rx="3"/><rect class="ui-tbar-in" x="0" y="0" width="${Math.max(6, Math.min(1, Math.max(0, p)) * 100).toFixed(1)}" height="6" rx="3"/></svg>`;
+
+/** "Heute" while clocked in: the sky of the afternoon, the stopwatch to the second, the Feierabend line, a thin bar
+ * to the target (the app's SkyCard since 20.10.2026), then day band and week strip. */
 export function todayScreen(lang) {
   const t = T[lang];
   const de = lang === 'de';
-  // 7:58 start, 7:48 target, 30 min break → Feierabend 16:16. Now 15:10: worked 6:42, 1:06 to go. Phase "Abend" (15–20).
-  const p = (hm(15, 10) - hm(7, 58)) / (hm(16, 16) - hm(7, 58));
-  const a = Math.PI * p, cx = (160 - 120 * Math.cos(a)).toFixed(1), cy = (118 - 120 * Math.sin(a) + 8).toFixed(1);
+  // 7:58 start, break 12:30–13:00, 7:48 target, 30 min break → Feierabend 16:16. Now 15:10:45: worked 6:42:45,
+  // 1:06 to go (rounded up). Phase "Abend" (15–20).
+  const p = (hm(6, 42) + 0.75) / hm(7, 48);
   const week = de ? ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'] : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const vals = [[488, '+0:20'], [490, '+0:22'], [402, '6:42'], [0, ''], [0, ''], [0, ''], [0, '']];
   const cols = vals.map(([m, d], i) => {
@@ -124,14 +128,11 @@ export function todayScreen(lang) {
       `<text class="ws-day" x="${x + 15}" y="80">${week[i]}</text><text class="ws-diff ${sign(d)}" x="${x + 15}" y="94">${d}</text></g>`;
   }).join('');
   const alt = de
-    ? 'Fieravend, Seite Stempeln am Nachmittag: Himmel in Abendfarbe, die Sonne steht kurz vor dem Horizont. Feierabend um 16:16, noch 1:06. Tagesband von 7:58 bis jetzt mit Pause um 12:30. Wochenstreifen: Montag plus 0:20, Dienstag plus 0:22, heute 6:42.'
-    : 'Fieravend, Clock screen in the afternoon: evening sky, the sun just above the horizon. You finish at 16:16, 1:06 to go. Day band from 7:58 until now with a break at 12:30. Week strip: Monday plus 0:20, Tuesday plus 0:22, today 6:42.';
+    ? 'Fieravend, Seite Stempeln am Nachmittag: Himmel in Abendfarbe. Heute gearbeitet 6:42:45, Feierabend 16:16, noch 1:06, ein Balken zeigt, wie weit du beim Soll bist. Tagesband von 7:58 bis jetzt mit Pause um 12:30. Wochenstreifen: Montag plus 0:20, Dienstag plus 0:22, heute 6:42.'
+    : 'Fieravend, Clock screen in the afternoon: evening sky. Worked today 6:42:45, you finish at 16:16, 1:06 to go, a bar shows how far you are towards your target. Day band from 7:58 until now with a break at 12:30. Week strip: Monday plus 0:20, Tuesday plus 0:22, today 6:42.';
   const html = `<div class="ui-screen" data-ui role="img" aria-label="${alt}"><div class="ui-in ui-in-sky" aria-hidden="true">` +
     `<span class="ui-sky sky-evening"><span class="ui-sky-top"><span class="ui-large">${t.today}</span><span class="ui-date">${t.date}</span></span>` +
-    `<svg class="ui-sky-arc" viewBox="0 0 320 132" focusable="false"><defs><clipPath id="skyclip-${lang}"><rect x="0" y="0" width="320" height="126"/></clipPath></defs>` +
-    `<path class="sky-arc" d="M40 126 A120 120 0 0 1 280 126"/><g clip-path="url(#skyclip-${lang})"><circle class="sky-sun" cx="${cx}" cy="${cy}" r="19"/>${[-1, 1].map((d) => `<circle class="sky-eye" cx="${(+cx + d * 6.5).toFixed(1)}" cy="${(+cy - 2.5).toFixed(1)}" r="2.6"/>`).join('')}</g>` +
-    `<line class="sky-horizon" x1="0" y1="126" x2="320" y2="126"/><text class="sky-label" x="40" y="122">7:58</text><text class="sky-label sky-label-end" x="280" y="122">16:16</text></svg>` +
-    `<span class="ui-sig"><span class="ui-sig-l">${de ? 'Feierabend um' : 'You finish at'}</span><b class="ui-sig-n num">16:16</b><span class="ui-sig-s num">${de ? 'noch 1:06 · 6:42 heute' : '1:06 to go · 6:42 today'}</span></span></span>` +
+    `<span class="ui-sig ui-sig-run"><span class="ui-sig-l">${de ? 'Heute gearbeitet' : 'Worked today'}</span><b class="ui-sig-n num">6:42:45</b><span class="ui-sig-s num">${de ? 'Feierabend 16:16 · noch 1:06' : 'Done at 16:16 · 1:06 to go'}</span>${targetBar(p)}</span></span>` +
     `<span class="ui-pad"><span class="ui-stamp">${t.out}</span>` +
     `<span class="ui-card ui-card-tight"><span class="ui-sub">${de ? 'Heute' : 'Today'}</span>${dayBand({ blocks: [[hm(7, 58), hm(12, 30), 'job-a'], [hm(13, 0), hm(15, 10), 'job-a']], now: hm(15, 10), end: hm(16, 16) })}</span>` +
     `<span class="ui-card ui-card-tight"><span class="ui-row"><span class="ui-sub">${de ? 'Diese Woche' : 'This week'}</span><b class="plus num">+0:42</b></span>` +
@@ -228,20 +229,29 @@ export function hintFragment(lang) {
     `<span><b>${t.hint}</b><span>${t.hintMore}</span><span class="ui-hint-small">${t.noAdvice}</span></span></span></div>`;
 }
 
-/** The clock card in three states for the pinned day: morning, midday, evening. */
+/** The clock card in three states for the pinned day, each in the sky colour of its time of day: in the morning
+ * before clocking in ("Heute 7:48 Soll"), on the break at midday (the stopwatch stands still, bar to the target), and
+ * after clocking out, when the sun goes down ("Feierabend."). Same day as the today screen: 7:58 start, break from
+ * 12:31, out at 16:31 with 8:03 worked, +0:15. */
 export function clockStages(lang) {
   const de = lang === 'de';
   const st = de
-    ? [['7:58', '0:00', 'Noch nicht eingestempelt.', 'Einstempeln', 'in'], ['12:31', '4:33', 'Pause seit 12:31', 'Weiter', 'pause'], ['16:31', '8:03', 'Feierabend. Heute 8:03, +0:15.', 'Einstempeln', 'out']]
-    : [['7:58', '0:00', 'Not clocked in yet.', 'Clock in', 'in'], ['12:31', '4:33', 'On a break since 12:31', 'Resume', 'pause'], ['16:31', '8:03', 'Done for today. 8:03 today, +0:15.', 'Clock in', 'out']];
+    ? [['7:58', 'Heute', '7:48', 'Soll', 'Einstempeln', 'in', 'sky-morning', null],
+      ['12:31', 'Pause', '4:33:12', 'Feierabend 16:16 · noch 3:45', 'Weiter', 'pause', 'sky-day', 273 / 468],
+      ['16:31', '', 'Feierabend.', '8:03 heute, +0:15', 'Einstempeln', 'out', 'sky-evening', null]]
+    : [['7:58', 'Today', '7:48', 'Target', 'Clock in', 'in', 'sky-morning', null],
+      ['12:31', 'Break', '4:33:12', 'Done at 16:16 · 3:45 to go', 'Resume', 'pause', 'sky-day', 273 / 468],
+      ['16:31', '', 'Done for the day.', '8:03 today, +0:15', 'Clock in', 'out', 'sky-evening', null]];
   const alt = de
-    ? 'Die Stempeluhr von Fieravend über den Tag: morgens um 7:58 der Knopf Einstempeln, mittags die Pause, um 16:31 Feierabend mit 8:03 Stunden.'
-    : 'The Fieravend clock across the day: at 7:58 the Clock in button, a break at midday, done at 16:31 with 8:03 hours.';
-  const cards = st.map(([now, worked, line, btn, k]) =>
-    `<span class="ui-stage-card st-${k}"><span class="ui-stage-now num">${now}</span>` +
-    `<span class="ui-stage-dial"><svg viewBox="0 0 200 120" aria-hidden="true" focusable="false"><defs><clipPath id="sd-${lang}-${k}"><rect x="0" y="0" width="200" height="86"/></clipPath></defs>` +
-    `<g clip-path="url(#sd-${lang}-${k})"><circle class="ui-sun sun-${k}" cx="100" cy="60" r="20"/></g><line class="ui-horizon" x1="10" y1="86" x2="190" y2="86"/></svg></span>` +
-    `<b class="ui-hero num">${worked}</b><span class="ui-note">${line}</span><span class="ui-stamp${k === 'pause' ? ' ui-stamp-quiet' : ''}">${btn}</span></span>`).join('');
+    ? 'Die Stempeluhr von Fieravend über den Tag: morgens um 7:58 heute 7:48 Soll und der Knopf Einstempeln, mittags die Pause bei 4:33:12 gearbeitet, Feierabend 16:16, um 16:31 Feierabend mit 8:03 Stunden, und die Sonne geht unter.'
+    : 'The Fieravend clock across the day: at 7:58 a target of 7:48 today and the Clock in button, a break at midday at 4:33:12 worked, done at 16:16, at 16:31 done for the day with 8:03 hours, and the sun goes down.';
+  const sunset = `<span class="ui-stage-dial"><svg viewBox="0 0 200 120" aria-hidden="true" focusable="false"><defs><clipPath id="sd-${lang}-out"><rect x="0" y="0" width="200" height="86"/></clipPath></defs>` +
+    `<g clip-path="url(#sd-${lang}-out)"><circle class="ui-sun sun-out" cx="100" cy="60" r="20"/></g><line class="ui-horizon" x1="10" y1="86" x2="190" y2="86"/></svg></span>`;
+  const cards = st.map(([now, label, hero, sub, btn, k, sky, prog]) =>
+    `<span class="ui-stage-card st-${k} ${sky}"><span class="ui-stage-now num">${now}</span>` +
+    (k === 'out' ? sunset : '') +
+    `<span class="ui-stage-sig">${label ? `<span class="ui-sig-l">${label}</span>` : ''}<b class="ui-hero num">${hero}</b><span class="ui-sig-s num">${sub}</span>${prog != null ? targetBar(prog) : ''}</span>` +
+    `<span class="ui-stamp${k === 'pause' ? ' ui-stamp-quiet' : ''}">${btn}</span></span>`).join('');
   return `<div class="ui-stage" data-ui role="img" aria-label="${alt}"><span class="ui-stage-in" aria-hidden="true">${cards}</span></div>`;
 }
 
@@ -292,5 +302,16 @@ export function privacyFragment(lang) {
     : [['Account', 'none'], ['Server', 'none'], ['Tracking', 'none'], ['Stored on', 'your iPhone and your iCloud'], ['Backup', 'JSON file, always free']];
   const alt = de ? 'Was mit deinen Daten passiert: kein Konto, kein Server, kein Tracking, gespeichert auf dem iPhone und in deiner iCloud, Backup als JSON-Datei immer frei.' : 'What happens with your data: no account, no server, no tracking, stored on your iPhone and in your iCloud, JSON backup always free.';
   return `<div class="ui-panel ui-panel-night" data-ui role="img" aria-label="${alt}"><span class="ui-values" aria-hidden="true">` +
+    rows.map(([k, v]) => `<span class="ui-row"><span>${k}</span><b>${v}</b></span>`).join('') + '</span></div>';
+}
+
+/** iPhone, iPad and Apple Watch: what each one does. */
+export function devicesFragment(lang) {
+  const de = lang === 'de';
+  const rows = de
+    ? [['iPhone', 'alles, mit Sperrbildschirm'], ['iPad', 'Seitenleiste, quer und hochkant'], ['Apple Watch', 'Stand, Stempeln, Komplikationen']]
+    : [['iPhone', 'everything, with lock screen'], ['iPad', 'sidebar, landscape and portrait'], ['Apple Watch', 'status, clock, complications']];
+  const alt = de ? 'Fieravend auf drei Geräten: iPhone mit allem und Sperrbildschirm, iPad mit Seitenleiste quer und hochkant, Apple Watch mit Stand von heute, Stempeln und Komplikationen.' : 'Fieravend on three devices: iPhone with everything and the lock screen, iPad with a sidebar in landscape and portrait, Apple Watch with today’s status, clocking and complications.';
+  return `<div class="ui-panel" data-ui role="img" aria-label="${alt}"><span class="ui-values" aria-hidden="true">` +
     rows.map(([k, v]) => `<span class="ui-row"><span>${k}</span><b>${v}</b></span>`).join('') + '</span></div>';
 }

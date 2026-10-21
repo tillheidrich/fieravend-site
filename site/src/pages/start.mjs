@@ -3,6 +3,8 @@
  * answers the question in the name, "Wann ist Feierabend?" (start time + contract hours + the legal break, § 4 ArbZG).
  * Then the app screens, one day in three states, what it counts, the laws, privacy, prices, questions and a first step.
  * Prices: Till's decision of 18.10.2026 (30-day trial, Plus 49,99 € once, Jahrespass 14,99 €, no subscription), planned.
+ * Devices and countries (21.10.2026): iPhone, iPad (sidebar), Apple Watch (status, clock, complications); DE/AT/CH, UK (WTR 1998),
+ * EU baseline, "Welt" pack with own values and no law hints.
  * Example people and places are fictional (Mira Berg, Praxis am Markt, Café Mika, Hotel am See).
  * No <form> elements: the CSP has form-action 'none', the mail links are plain mailto links that start.js fills in.
  */
@@ -11,7 +13,7 @@ import { href, ORG } from '../layout.mjs';
 import { MAIL, SITE, ROUTES, APP_STORE_URL } from '../config.mjs';
 import { feierabendClock } from '../feierabend.mjs';
 import { magazinTeaser } from './magazin.mjs';
-import { todayScreen, monthScreen, calendarScreen, overviewScreen, proofSheet, hintFragment, clockStages, holidaysFragment, leaveFragment, jobsFragment, countriesFragment } from '../screens.mjs';
+import { todayScreen, monthScreen, calendarScreen, overviewScreen, proofSheet, hintFragment, devicesFragment, clockStages, holidaysFragment, leaveFragment, jobsFragment, countriesFragment } from '../screens.mjs';
 
 const C = {
   de: {
@@ -44,7 +46,7 @@ const C = {
     photo2: 'Stempeluhr mit Kartenfächern für Kommen und Gehen, in einem Museum.',
     showH: 'So sieht Fieravend aus.',
     show: [
-      ['Stempeln', 'Der Himmel folgt deinem Tag, die Sonne wandert bis zum Feierabend. Darunter dein Tag als Band und die Woche auf einen Blick.'],
+      ['Stempeln', 'Der Himmel folgt deinem Tag. Oben läuft deine Zeit auf die Sekunde, darunter dein Feierabend und ein Balken bis zum Soll. Dann dein Tag als Band und die Woche auf einen Blick.'],
       ['Monat', 'Jeder Tag mit seinen Zeiten als Band und der Differenz. Feiertage und Urlaub stehen schon drin.'],
       ['Kalender', 'Der Monat als Farbfeld: grün für Plus, Abendrot für Minus, Sonne für Urlaub, Fahne für Feiertag.'],
       ['Übersicht', 'Dein Überstundenkonto wie ein Kontostand über zwölf Monate, dein Urlaub als Punkte.'],
@@ -53,21 +55,22 @@ const C = {
     showHint: 'Zum Blättern wischen oder mit den Pfeiltasten.',
     dayH: 'Ein Tag mit Fieravend.',
     day: [
-      ['Morgens ein Tipp.', 'Einstempeln auf dem iPhone oder direkt vom Sperrbildschirm. Die Uhr läuft weiter, auch wenn die App zu ist.'],
-      ['Mittags die Pause.', 'Pause drücken, weiter drücken. Fehlt eine Pause, sagt Fieravend es dir ruhig, ohne Paragrafen.'],
+      ['Morgens ein Tipp.', 'Einstempeln auf dem iPhone, vom Sperrbildschirm oder an der Apple Watch. Ab dann läuft deine Zeit auf die Sekunde mit, auch wenn die App zu ist.'],
+      ['Mittags die Pause.', 'Pause drücken, weiter drücken. Der Balken zeigt, wie weit du beim Soll bist. Fehlt eine Pause, sagt Fieravend es dir ruhig, ohne Paragrafen.'],
       ['Abends Feierabend.', 'Ausstempeln, und die Sonne geht unter. Du siehst sofort, wie lange du heute gearbeitet hast.'],
     ],
     featH: 'Was Fieravend für dich rechnet.',
     feat: [
-      ['Feiertage für dein Bundesland', 'Fieravend kennt die Feiertage aller 16 Bundesländer, der 9 österreichischen Bundesländer und der 26 Kantone.', 'An einem Feiertag gibt es kein Minus.', 'holidays'],
+      ['Feiertage für dein Bundesland', 'Fieravend kennt die Feiertage aller 16 Bundesländer, der 9 österreichischen Bundesländer, der 26 Kantone und die Bank Holidays im Vereinigten Königreich.', 'An einem Feiertag gibt es kein Minus.', 'holidays'],
       ['Urlaub, wie er wirklich zählt', 'Wochenenden und Feiertage kosten keinen Urlaubstag. Resturlaub und Übertrag rechnet Fieravend mit.', 'Droht Resturlaub zu verfallen, sagt Fieravend es dir rechtzeitig.', 'leave'],
       ['Ruhige Hinweise zum Gesetz', 'Pause zu kurz, Tag zu lang, Ruhezeit zu knapp? Fieravend sagt es dir, ohne Alarm und ohne Rot.', 'Hinweise ersetzen keine Rechtsberatung.', 'hint'],
       ['Zwei Jobs, ein Tag', 'Jeder Job hat sein eigenes Konto. Für Pausen und Ruhezeit zählt Fieravend alles zusammen, so wie das Gesetz.', 'Auf dem Stundenzettel für einen Job steht nur dieser Job.', 'jobs'],
       ['Ein Nachweis, dem man glaubt', 'Jeder Tag mit Beginn, Ende, Pause und Arbeitszeit. Was du später nachgetragen hast, ist gekennzeichnet.', 'Mit der Prüfsumme lässt sich zeigen, dass ein Ausdruck zu den Daten in deiner App passt.', 'proof'],
-      ['Das Wort, das bei dir gilt', 'Überstunden in Deutschland, Zeitausgleich in Österreich, Überzeit in der Schweiz. Das Land hängt am Arbeitsort.', 'In anderen EU-Ländern gelten die Grundregeln der EU.', 'countries'],
+      ['Das Wort, das bei dir gilt', 'Überstunden in Deutschland, Zeitausgleich in Österreich, Überzeit in der Schweiz. Das Land hängt am Arbeitsort.', 'Im Vereinigten Königreich gelten die Working Time Regulations 1998, in anderen EU-Ländern die Grundregeln der EU. Überall sonst trägst du Soll, Feiertage und Pause selbst ein.', 'countries'],
+      ['Am Handgelenk und auf dem iPad', 'Auf der Apple Watch siehst du den Stand von heute und stempelst ein, machst Pause oder stempelst aus. Dazu gibt es Komplikationen fürs Zifferblatt.', 'Auf dem iPad hat Fieravend eine eigene Ansicht mit Seitenleiste, quer und hochkant, auch mit Stage Manager. Deine Daten bleiben auf dem iPhone, die Uhr schickt nur deinen Tipp.', 'devices'],
     ],
     lawsIntro: 'Gerechnet nach',
-    laws: ['ArbZG', 'BUrlG', 'JArbSchG', 'AZG (AT)', 'ArG (CH)', 'RL 2003/88/EG'],
+    laws: ['ArbZG', 'BUrlG', 'JArbSchG', 'AZG (AT)', 'ArG (CH)', 'WTR 1998 (UK)', 'RL 2003/88/EG'],
     privH: 'Deine Zeit gehört dir.',
     privP: 'Kein Konto, kein Server, kein Tracking, keine Werbung. Deine Einträge liegen auf deinem iPhone und in deiner eigenen iCloud. Auf Wunsch sperrst du die App mit Face ID. Ein Backup deiner Daten geht immer, auch ohne Kauf.',
     privLink: 'Wie wir mit Daten umgehen',
@@ -84,7 +87,7 @@ const C = {
       ['Gesetzes-Updates', 'ja', 'nein', 'für das Jahr', 'für immer'],
       ['Verlängert sich von selbst', 'nein', 'nein', 'nein', 'nein'],
     ],
-    plusLaunch: 'Plus zum Start 34,99 € bis 31.1.2027',
+    plusLaunch: 'Der Jahrespass gilt ein Kalenderjahr, ab Oktober für das nächste',
     faqH: 'Kurz gefragt.',
     faq: [
       ['Darf ich das, wenn mein Chef es nicht verlangt?', 'Ja. Du schreibst deine eigene Arbeitszeit auf, für dich. Niemand muss zustimmen.'],
@@ -93,8 +96,9 @@ const C = {
       ['Und wenn ich vergesse zu stempeln?', 'Dann trägst du die Zeit nach. Auf Wunsch erinnert Fieravend dich morgens ans Einstempeln und abends, wenn du noch eingestempelt bist.'],
       ['Ich komme von myTime oder Excel. Muss ich neu anfangen?', 'Nein. Du nimmst deine Einträge als CSV mit und trägst deinen Überstunden- und Urlaubsstand als Startwert ein.'],
       ['Ich arbeite auch am Wochenende oder an Feiertagen. Rechnet Fieravend das richtig?', 'Ja. Ist der Tag für dich sonst frei, ist jede Stunde Plus. Für Schichtarbeit gibt es das Modell „Wechselnde Tage (Dienstplan)“, und fehlt dir ein Ersatzruhetag, sagt Fieravend es dir.'],
-      ['Gilt das auch in Österreich und der Schweiz?', 'Ja. Feiertage, Pausen und Ruhezeiten rechnet Fieravend nach dem Gesetz des Landes, in dem dein Job ist.'],
-      ['Gibt es Fieravend für Android?', 'Noch nicht. Erst kommt das iPhone. Schreib uns eine Mail mit dem Betreff „Android“, dann sagen wir Bescheid.'],
+      ['Gilt das auch in Österreich und der Schweiz?', 'Ja. Feiertage, Pausen und Ruhezeiten rechnet Fieravend nach dem Gesetz des Landes, in dem dein Job ist. Das gilt auch fürs Vereinigte Königreich. In anderen EU-Ländern gelten die Grundregeln der EU, überall sonst deine eigenen Werte.'],
+      ['Gibt es Fieravend für die Apple Watch und das iPad?', 'Ja. An der Uhr siehst du den Stand von heute und stempelst ein, machst Pause oder stempelst aus. Dazu gibt es Komplikationen fürs Zifferblatt. Die Daten bleiben auf dem iPhone. Auf dem iPad hat Fieravend eine eigene Ansicht mit Seitenleiste.'],
+      ['Gibt es Fieravend für Android?', 'Noch nicht. Fieravend gibt es für iPhone, iPad und Apple Watch. Schreib uns eine Mail mit dem Betreff „Android“, dann sagen wir Bescheid.'],
     ],
     faqMore: 'Alle Fragen und Antworten',
     endH: ['Leg deinen', 'ersten Job an.'],
@@ -133,7 +137,7 @@ const C = {
     photo2: 'Time clock with card racks for clocking in and out, in a museum.',
     showH: 'What Fieravend looks like.',
     show: [
-      ['Clock', 'The sky follows your day, the sun moves towards the end of work. Below it your day as a band and the week at a glance.'],
+      ['Clock', 'The sky follows your day. At the top your time runs to the second, below it when you are done and a bar towards your target. Then your day as a band and the week at a glance.'],
       ['Month', 'Every day with its times as a band and the difference. Public holidays and leave are already in.'],
       ['Calendar', 'The month as a colour field: green for plus, evening red for minus, a sun for leave, a flag for holidays.'],
       ['Overview', 'Your overtime balance like a bank balance over twelve months, your leave as dots.'],
@@ -142,21 +146,22 @@ const C = {
     showHint: 'Swipe or use the arrow keys to browse.',
     dayH: 'A day with Fieravend.',
     day: [
-      ['One tap in the morning.', 'Clock in on the iPhone or right from the lock screen. The clock keeps running when the app is closed.'],
-      ['A break at midday.', 'Tap break, tap resume. If a break is missing, Fieravend tells you calmly, without legal jargon.'],
+      ['One tap in the morning.', 'Clock in on the iPhone, from the lock screen or on your Apple Watch. From then on your time runs to the second, even when the app is closed.'],
+      ['A break at midday.', 'Tap break, tap resume. The bar shows how far you are towards your target. If a break is missing, Fieravend tells you calmly, without legal jargon.'],
       ['Done in the evening.', 'Clock out and the sun goes down. You see right away how long you worked today.'],
     ],
     featH: 'What Fieravend works out for you.',
     feat: [
-      ['Public holidays for your state', 'Fieravend knows the holidays of all 16 German states, the 9 Austrian states and the 26 Swiss cantons.', 'A public holiday never puts you in the minus.', 'holidays'],
+      ['Public holidays for your state', 'Fieravend knows the holidays of all 16 German states, the 9 Austrian states, the 26 Swiss cantons and the UK bank holidays.', 'A public holiday never puts you in the minus.', 'holidays'],
       ['Leave as it really counts', 'Weekends and public holidays do not cost a day of leave. Days left and carry-over are counted too.', 'If leave is about to expire, Fieravend tells you in time.', 'leave'],
       ['Calm hints about the law', 'Break too short, day too long, rest too short? Fieravend tells you, without alarms and without red.', 'Hints are not legal advice.', 'hint'],
       ['Two jobs, one day', 'Each job has its own balance. For breaks and rest time Fieravend adds everything up, like the law does.', 'The time sheet for one job shows only that job.', 'jobs'],
       ['A record people believe', 'Every day with start, end, break and hours. Anything you added later is marked.', 'The checksum lets you show that a printout matches the data in your app.', 'proof'],
-      ['The word that applies to you', 'Überstunden in Germany, Zeitausgleich in Austria, Überzeit in Switzerland. The country comes from where you work.', 'Other EU countries get the basic EU rules.', 'countries'],
+      ['The word that applies to you', 'Überstunden in Germany, Zeitausgleich in Austria, Überzeit in Switzerland. The country comes from where you work.', 'In the UK the Working Time Regulations 1998 apply, in other EU countries the basic EU rules. Anywhere else you enter your target, holidays and break yourself.', 'countries'],
+      ['On your wrist and on the iPad', 'On the Apple Watch you see today’s status and clock in, take a break or clock out. There are complications for the watch face too.', 'On the iPad Fieravend has its own layout with a sidebar, in landscape and portrait, with Stage Manager too. Your data stays on the iPhone, the watch only sends your tap.', 'devices'],
     ],
     lawsIntro: 'Worked out under',
-    laws: ['ArbZG', 'BUrlG', 'JArbSchG', 'AZG (AT)', 'ArG (CH)', 'Directive 2003/88/EC'],
+    laws: ['ArbZG', 'BUrlG', 'JArbSchG', 'AZG (AT)', 'ArG (CH)', 'WTR 1998 (UK)', 'Directive 2003/88/EC'],
     privH: 'Your time belongs to you.',
     privP: 'No account, no server, no tracking, no ads. Your entries live on your iPhone and in your own iCloud. If you like, you lock the app with Face ID. Backing up your data always works, even without buying anything.',
     privLink: 'How we handle data',
@@ -173,7 +178,7 @@ const C = {
       ['Law updates', 'yes', 'no', 'for the year', 'for good'],
       ['Renews by itself', 'no', 'no', 'no', 'no'],
     ],
-    plusLaunch: 'Plus at launch €34.99 until 31 Jan 2027',
+    plusLaunch: 'The Year Pass covers one calendar year, from October the next one',
     faqH: 'Quick questions.',
     faq: [
       ['Am I allowed to do this if my boss does not ask?', 'Yes. You write down your own working time, for yourself. Nobody has to agree.'],
@@ -182,8 +187,9 @@ const C = {
       ['What if I forget to clock in?', 'Then you add the time later. If you like, Fieravend reminds you to clock in in the morning and in the evening if you are still clocked in.'],
       ['I am coming from myTime or Excel. Do I start over?', 'No. You bring your entries along as CSV and enter your overtime and leave balance as a starting point.'],
       ['I also work weekends or public holidays. Does Fieravend count that correctly?', 'Yes. If the day would otherwise be off, every hour is plus. For shift work there is the “Changing days (rota)” model, and if you are owed a replacement rest day, Fieravend tells you.'],
-      ['Does it work in Austria and Switzerland?', 'Yes. Public holidays, breaks and rest times follow the law of the country your job is in.'],
-      ['Is there an Android version?', 'Not yet. The iPhone comes first. Send us an email with the subject “Android” and we will let you know.'],
+      ['Does it work in Austria and Switzerland?', 'Yes. Public holidays, breaks and rest times follow the law of the country your job is in. That includes the UK. Other EU countries get the basic EU rules, anywhere else your own values.'],
+      ['Is there an Apple Watch and iPad version?', 'Yes. On the watch you see today’s status and clock in, take a break or clock out. There are complications for the watch face too. The data stays on the iPhone. On the iPad Fieravend has its own layout with a sidebar.'],
+      ['Is there an Android version?', 'Not yet. Fieravend is for iPhone, iPad and Apple Watch. Send us an email with the subject “Android” and we will let you know.'],
     ],
     faqMore: 'All questions and answers',
     endH: ['Add your', 'first job.'],
@@ -203,7 +209,7 @@ export default function start(lang) {
   const screens = [todayScreen(lang), monthScreen(lang), calendarScreen(lang), overviewScreen(lang), proofSheet(lang)];
   const panels = screens.map((s, i) => `<li class="rail-item"><figure class="rail-fig">${s}<figcaption><b>${c.show[i][0]}</b><span>${c.show[i][1]}</span></figcaption></figure></li>`).join('');
   const steps = c.day.map(([h, p], i) => `<li class="day-step" data-step="${['in', 'pause', 'out'][i]}"><h3>${h}</h3><p>${p}</p></li>`).join('');
-  const frag = { holidays: holidaysFragment, leave: leaveFragment, hint: hintFragment, jobs: jobsFragment, proof: (l) => proofSheet(l, { crop: true }), countries: countriesFragment };
+  const frag = { holidays: holidaysFragment, leave: leaveFragment, hint: hintFragment, jobs: jobsFragment, proof: (l) => proofSheet(l, { crop: true }), countries: countriesFragment, devices: devicesFragment };
   const feats = c.feat.map(([h, p, q, k]) => `<li class="feat reveal"><div class="feat-panel">${frag[k](lang)}</div><div class="feat-text"><h3>${h}</h3><p>${p}</p><p class="feat-more">${q}</p></div></li>`).join('');
   const laws = c.laws.map((l) => `<li>${l}</li>`).join('');
   const head = c.plans.map(([n, p, s], i) => `<th scope="col" class="${i === 3 ? 'is-rec' : ''}"><span class="pt-name">${n}</span> <span class="pt-price num">${p}</span> <span class="pt-per">${s}</span></th>`).join('');
@@ -335,9 +341,9 @@ export default function start(lang) {
   const jsonld = [
     ORG,
     { '@type': 'WebSite', '@id': `${SITE}/#site`, name: 'Fieravend', url, inLanguage: lang, publisher: { '@id': ORG['@id'] } },
-    { '@type': 'MobileApplication', '@id': `${SITE}/#app`, name: 'Fieravend', url, operatingSystem: 'iOS 18 oder neuer', applicationCategory: 'BusinessApplication',
-      inLanguage: ['de', 'en'], description: c.desc, publisher: { '@id': ORG['@id'] }, countriesSupported: ['DE', 'AT', 'CH', 'EU'],
-      featureList: c.feat.map(([h]) => h).concat(lang === 'de' ? ['Stempeluhr mit Sperrbildschirm und Live-Aktivität', 'Stundenzettel als PDF und CSV', 'Import aus myTime und CSV', 'Kein Konto, kein Server, kein Tracking'] : ['Clock with lock screen and Live Activity', 'Time sheet as PDF and CSV', 'Import from myTime and CSV', 'No account, no server, no tracking']),
+    { '@type': 'MobileApplication', '@id': `${SITE}/#app`, name: 'Fieravend', url, operatingSystem: lang === 'de' ? 'iOS 18, iPadOS 18 und watchOS 11 oder neuer' : 'iOS 18, iPadOS 18 and watchOS 11 or later', applicationCategory: 'BusinessApplication',
+      inLanguage: ['de', 'en'], description: c.desc, publisher: { '@id': ORG['@id'] }, countriesSupported: ['DE', 'AT', 'CH', 'GB', 'EU'],
+      featureList: c.feat.map(([h]) => h).concat(lang === 'de' ? ['Stempeluhr mit Sperrbildschirm und Live-Aktivität', 'Apple Watch mit Komplikationen', 'iPad mit Seitenleiste', 'Stundenzettel als PDF und CSV', 'Import aus myTime und CSV', 'Kein Konto, kein Server, kein Tracking'] : ['Clock with lock screen and Live Activity', 'Apple Watch with complications', 'iPad with sidebar', 'Time sheet as PDF and CSV', 'Import from myTime and CSV', 'No account, no server, no tracking']),
       ...(APP_STORE_URL ? { downloadUrl: APP_STORE_URL, offers: [{ '@type': 'Offer', price: '0', priceCurrency: 'EUR', description: lang === 'de' ? '30 Tage testen' : '30-day trial' }] } : {}) },
     { '@type': 'FAQPage', inLanguage: lang, mainEntity: c.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
   ];
